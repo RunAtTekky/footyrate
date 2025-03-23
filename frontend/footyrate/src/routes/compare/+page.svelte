@@ -1,10 +1,37 @@
 <script>
-    import Img1 from '../../images/1.webp'
-    import Img2 from '../../images/2.webp'
-
+    // State for selected image
     let selected = $state(0);
-
-    const IMAGE_WIDTH = '300px';
+    // State for image URLs from API
+    let img1 = $state('');
+    let img2 = $state('');
+    let loading = $state(true);
+    const IMAGE_HEIGHT = '300px';
+    
+    // API URL
+    const API_URL = 'http://localhost:8080/api/random-images';
+    
+    // Function to fetch random images
+    async function fetchRandomImages() {
+        loading = true;
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) {
+                throw new Error('Failed to fetch images');
+            }
+            const data = await response.json();
+            img1 = data.image1;
+            img2 = data.image2;
+            // Reset selection when new images are loaded
+            selected = 0;
+        } catch (error) {
+            console.error('Error fetching images:', error);
+        } finally {
+            loading = false;
+        }
+    }
+    
+    // Load initial images
+    fetchRandomImages();
 </script>
 
 <style>
@@ -25,43 +52,65 @@
         width: 80%;
         background-color: #C9E4E7;
         border-radius: 10px;
+        padding: 20px;
     }
-
     button {
+        width: 50%;
         margin: 20px;
         border: none;
         transition: 0.3s;
+        background: none;
+        cursor: pointer;
     }
-
     button:hover {
         transform: scale(1.05);
     }
-
     button:active {
         transform: translateY(4px);
     }
-
     .result {
         padding-top: 20px;
+        margin-bottom: 20px;
+    }
+    .refresh-btn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+    .loading {
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 </style>
 
-
 <main>
     <h1>Choose</h1>
-    <container>
-        <button onclick={() => {selected = 1;}}>
-            <img src={Img1} width={IMAGE_WIDTH} alt="Are you doing your part?">
-        </button>
-        <button onclick={() => {selected = 2;}}>
-            <img src={Img2} width={IMAGE_WIDTH} alt="Become spiderman or FROGGO">
-        </button>
-    </container>
-
-    {#if selected != 0}
-    <p class="result">Image {selected} selected</p>
+    
+    {#if loading}
+        <div class="loading">Loading images...</div>
     {:else}
-    <p class="result">Select</p>
+        <container>
+            <button onclick={() => {selected = 1;}}>
+                <img src={img1} height={IMAGE_HEIGHT} alt="First">
+            </button>
+            <button onclick={() => {selected = 2;}}>
+                <img src={img2} height={IMAGE_HEIGHT} alt="Second">
+            </button>
+        </container>
+        
+        {#if selected != 0}
+            <p class="result">Image {selected} selected</p>
+        {:else}
+            <p class="result">Select an image</p>
+        {/if}
+        
+        <button class="refresh-btn" onclick={fetchRandomImages}>
+            Get New Images
+        </button>
     {/if}
-
 </main>
