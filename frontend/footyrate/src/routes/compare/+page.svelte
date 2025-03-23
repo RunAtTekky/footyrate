@@ -60,6 +60,8 @@
 
     {#if selected != 0}
     <p class="result">Image {selected} selected</p>
+    {:else}
+    <p class="result">Select</p>
     {/if}
 
 </main>
