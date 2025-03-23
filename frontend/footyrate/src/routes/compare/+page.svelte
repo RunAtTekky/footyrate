@@ -30,6 +30,15 @@
     button {
         margin: 20px;
         border: none;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+    }
+
+    button:active {
+        transform: translateY(4px);
     }
 
     .result {
@@ -39,7 +48,7 @@
 
 
 <main>
-    <h1>Hola</h1>
+    <h1>Choose</h1>
     <container>
         <button onclick={() => {selected = 1;}}>
             <img src={Img1} width={IMAGE_WIDTH} alt="Are you doing your part?">
