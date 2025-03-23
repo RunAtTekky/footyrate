@@ -2,6 +2,8 @@
     import Img1 from '../../images/1.webp'
     import Img2 from '../../images/2.webp'
 
+    let selected = $state(0);
+
     const IMAGE_WIDTH = '300px';
 </script>
 
@@ -12,7 +14,9 @@
     }
     main {
         display: flex;
+        flex-direction: column;
         justify-content: center;
+        align-items: center;
     }
     container {
         display: flex;
@@ -27,17 +31,26 @@
         margin: 20px;
         border: none;
     }
+
+    .result {
+        padding-top: 20px;
+    }
 </style>
 
 
-<h1>Hola</h1>
 <main>
+    <h1>Hola</h1>
     <container>
-        <button>
+        <button onclick={() => {selected = 1;}}>
             <img src={Img1} width={IMAGE_WIDTH} alt="Are you doing your part?">
         </button>
-        <button>
+        <button onclick={() => {selected = 2;}}>
             <img src={Img2} width={IMAGE_WIDTH} alt="Become spiderman or FROGGO">
         </button>
     </container>
+
+    {#if selected != 0}
+    <p class="result">Image {selected} selected</p>
+    {/if}
+
 </main>
