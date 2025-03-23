@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     // State for selected image
     let selected = $state(0);
     // State for image URLs from API
@@ -29,6 +29,12 @@
             loading = false;
         }
     }
+
+    function handle_selection (n: number) {
+        selected = n;
+
+        fetchRandomImages();
+    }
     
     // Load initial images
     fetchRandomImages();
@@ -49,7 +55,7 @@
         display: flex;
         justify-content: space-around;
         align-items: center;
-        width: 80%;
+        width: 95%;
         background-color: #C9E4E7;
         border-radius: 10px;
         padding: 20px;
@@ -72,14 +78,6 @@
         padding-top: 20px;
         margin-bottom: 20px;
     }
-    .refresh-btn {
-        background-color: #4CAF50;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
     .loading {
         height: 300px;
         display: flex;
@@ -95,10 +93,10 @@
         <div class="loading">Loading images...</div>
     {:else}
         <container>
-            <button onclick={() => {selected = 1;}}>
+            <button onclick={() => handle_selection(1)}>
                 <img src={img1} height={IMAGE_HEIGHT} alt="First">
             </button>
-            <button onclick={() => {selected = 2;}}>
+            <button onclick={() => handle_selection(2)}>
                 <img src={img2} height={IMAGE_HEIGHT} alt="Second">
             </button>
         </container>
@@ -108,9 +106,5 @@
         {:else}
             <p class="result">Select an image</p>
         {/if}
-        
-        <button class="refresh-btn" onclick={fetchRandomImages}>
-            Get New Images
-        </button>
     {/if}
 </main>
