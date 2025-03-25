@@ -52,11 +52,36 @@ func (server *Server) MountHandlers() {
 	apiRouter.Group(func(r chi.Router) {
 		r.Get("/random-images", handle_random)
 		r.Get("/images", handle_imagelist)
+		r.Post("/result", handle_result)
 	})
 
 	server.Router.Handle(IMAGES_URL+"*", http.StripPrefix(IMAGES_URL, http.FileServer(http.Dir(IMAGES_DIR))))
 
 	server.Router.Mount("/api", apiRouter)
+}
+
+type Result struct {
+	Winner string `json:"winner"`
+	Loser  string `json:"loser"`
+}
+
+func handle_result(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+	result := new(Result)
+
+	if err := json.NewDecoder(r.Body).Decode(result); err != nil {
+		fmt.Printf("Error decoding result")
+		return
+	}
+
+	json.NewEncoder(w).Encode(result)
 }
 
 func handle_random(w http.ResponseWriter, r *http.Request) {
