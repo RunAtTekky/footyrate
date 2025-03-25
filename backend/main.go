@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand/v2"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -74,8 +75,10 @@ func handle_random(w http.ResponseWriter, r *http.Request) {
 
 	baseURL := getBaseURL(r)
 
-	IMAGE1_URL := baseURL + IMAGES_URL + images[0]
-	IMAGE2_URL := baseURL + IMAGES_URL + images[1]
+	Image1, Image2 := get_two_images(&images)
+
+	IMAGE1_URL := baseURL + IMAGES_URL + images[Image1]
+	IMAGE2_URL := baseURL + IMAGES_URL + images[Image2]
 
 	response := Response{
 		Image1: IMAGE1_URL,
@@ -83,6 +86,24 @@ func handle_random(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(response)
+}
+
+func get_two_images(images *[]string) (int, int) {
+
+	var image1 int
+	var image2 int
+
+	n := len(*images)
+
+	image1 = rand.IntN(n)
+	image2 = rand.IntN(n)
+
+	for image1 == image2 {
+		image2 = rand.IntN(n)
+	}
+
+	return image1, image2
+
 }
 
 func handle_imagelist(w http.ResponseWriter, r *http.Request) {
