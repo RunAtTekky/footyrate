@@ -112,22 +112,20 @@ func handle_random(w http.ResponseWriter, r *http.Request) {
 
 	Image1_idx, Image2_idx := get_two_images(&images)
 
-	img1 := new(Image)
-	img1.ID = Image1_idx
-	img1.URL = baseURL + IMAGES_URL + images[Image1_idx]
-	img1.ELO = 1400
-
-	img2 := new(Image)
-	img2.ID = Image2_idx
-	img2.URL = baseURL + IMAGES_URL + images[Image2_idx]
-	img2.ELO = 1400
-
-	// IMAGE1_URL := baseURL + IMAGES_URL + images[Image1]
-	// IMAGE2_URL := baseURL + IMAGES_URL + images[Image2]
+	img1 := Image{
+		ID:  Image1_idx,
+		URL: baseURL + IMAGES_URL + images[Image1_idx],
+		ELO: 1400,
+	}
+	img2 := Image{
+		ID:  Image2_idx,
+		URL: baseURL + IMAGES_URL + images[Image2_idx],
+		ELO: 1400,
+	}
 
 	response := Response{
-		Image1: *img1,
-		Image2: *img2,
+		Image1: img1,
+		Image2: img2,
 	}
 
 	json.NewEncoder(w).Encode(response)
