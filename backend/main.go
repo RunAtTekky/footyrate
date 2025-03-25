@@ -81,6 +81,8 @@ func handle_result(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Printf("Winner %s \n Loser %s\n\n", result.Winner, result.Loser)
+
 	json.NewEncoder(w).Encode(result)
 }
 

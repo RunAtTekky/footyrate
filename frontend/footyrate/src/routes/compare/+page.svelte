@@ -1,6 +1,26 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 
+    interface ImageData {
+        id: number;
+        url: string;
+        elo: number;
+    }
+
+    let Image1: ImageData = {
+        id: 0,
+        url: "",
+        elo: 1400,
+    };
+    let Image2: ImageData = {
+        id: 1,
+        url: "",
+        elo: 1400,
+    };
+
+    let images: ImageData[] = [];
+    let current_images: ImageData[] = [];
+
     // State for selected image
     let selected = $state(0);
     // State for image URLs from API
@@ -11,6 +31,30 @@
     
     // API URL
     const API_URL = 'http://localhost:8080/api/random-images';
+    const API_RESULT = 'http://localhost:8080/api/result';
+
+    async function submit_vote(winnerID: string, loserID: string) {
+        try {
+            const response = await fetch(API_RESULT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json',
+                },
+                body: JSON.stringify({
+                    winner: winnerID,
+                    loser: loserID,
+                })
+            })
+
+            if (!response.ok) {
+                throw new Error('Error submitting vote');
+            }
+
+            await fetchRandomImages();
+        } catch(err) {
+            console.error("Error occurred submitting vote", err);
+        }
+    }
     
     // Function to fetch random images
     async function fetchRandomImages() {
@@ -21,6 +65,8 @@
                 throw new Error('Failed to fetch images');
             }
             const data = await response.json();
+            Image1.url = data.image1;
+            Image2.url = data.image2;
             img1 = data.image1;
             img2 = data.image2;
             // Reset selection when new images are loaded
@@ -32,9 +78,17 @@
         }
     }
 
+    function handle_vote(n: number) {
+        if (n == 1) {
+            submit_vote(Image1.url, Image2.url)
+        } else {
+            submit_vote(Image2.url, Image1.url)
+        }
+    }
     function handle_selection (n: number) {
         selected = n;
 
+        handle_vote(n);
         fetchRandomImages();
     }
     
