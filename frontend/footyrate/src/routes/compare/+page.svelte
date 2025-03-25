@@ -7,25 +7,21 @@
         elo: number;
     }
 
-    let Image1: ImageData = {
+    let Image1: ImageData = $state({
         id: 0,
         url: "",
         elo: 1400,
-    };
-    let Image2: ImageData = {
+    });
+
+    let Image2: ImageData = $state({
         id: 1,
         url: "",
         elo: 1400,
-    };
-
-    let images: ImageData[] = [];
-    let current_images: ImageData[] = [];
+    });
 
     // State for selected image
     let selected = $state(0);
     // State for image URLs from API
-    let img1 = $state('');
-    let img2 = $state('');
     let loading = $state(true);
     const IMAGE_HEIGHT = '300px';
     
@@ -50,7 +46,10 @@
                 throw new Error('Error submitting vote');
             }
 
-            await fetchRandomImages();
+            const data = await response.json();
+            console.log(data.winner)
+
+            // await fetchRandomImages();
         } catch(err) {
             console.error("Error occurred submitting vote", err);
         }
@@ -65,10 +64,9 @@
                 throw new Error('Failed to fetch images');
             }
             const data = await response.json();
-            Image1.url = data.image1;
-            Image2.url = data.image2;
-            img1 = data.image1;
-            img2 = data.image2;
+            Image1 = data.image1;
+            Image2 = data.image2;
+
             // Reset selection when new images are loaded
             selected = 0;
         } catch (error) {
@@ -152,10 +150,10 @@
     {:else}
         <container>
             <button onclick={() => handle_selection(1)}>
-                <img src={img1} height={IMAGE_HEIGHT} alt="First">
+                <img src={Image1.url} height={IMAGE_HEIGHT} alt="First">
             </button>
             <button onclick={() => handle_selection(2)}>
-                <img src={img2} height={IMAGE_HEIGHT} alt="Second">
+                <img src={Image2.url} height={IMAGE_HEIGHT} alt="Second">
             </button>
         </container>
         

@@ -14,10 +14,21 @@ import (
 	"github.com/go-chi/cors"
 )
 
+type Image struct {
+	ID  int    `json:"id"`
+	URL string `json:"url"`
+	ELO int    `json:"elo"`
+}
+
 // Response struct to send back JSON with image URLs
 type Response struct {
-	Image1 string `json:"image1"`
-	Image2 string `json:"image2"`
+	Image1 Image `json:"image1"`
+	Image2 Image `json:"image2"`
+}
+
+type Result struct {
+	Winner string `json:"winner"`
+	Loser  string `json:"loser"`
 }
 
 // Configuration settings
@@ -60,11 +71,6 @@ func (server *Server) MountHandlers() {
 	server.Router.Mount("/api", apiRouter)
 }
 
-type Result struct {
-	Winner string `json:"winner"`
-	Loser  string `json:"loser"`
-}
-
 func handle_result(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "OPTIONS" {
@@ -82,6 +88,8 @@ func handle_result(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Printf("Winner %s \n Loser %s\n\n", result.Winner, result.Loser)
+
+	// w.Write([]byte(result.Winner))
 
 	json.NewEncoder(w).Encode(result)
 }
@@ -102,14 +110,24 @@ func handle_random(w http.ResponseWriter, r *http.Request) {
 
 	baseURL := getBaseURL(r)
 
-	Image1, Image2 := get_two_images(&images)
+	Image1_idx, Image2_idx := get_two_images(&images)
 
-	IMAGE1_URL := baseURL + IMAGES_URL + images[Image1]
-	IMAGE2_URL := baseURL + IMAGES_URL + images[Image2]
+	img1 := new(Image)
+	img1.ID = Image1_idx
+	img1.URL = baseURL + IMAGES_URL + images[Image1_idx]
+	img1.ELO = 1400
+
+	img2 := new(Image)
+	img2.ID = Image2_idx
+	img2.URL = baseURL + IMAGES_URL + images[Image2_idx]
+	img2.ELO = 1400
+
+	// IMAGE1_URL := baseURL + IMAGES_URL + images[Image1]
+	// IMAGE2_URL := baseURL + IMAGES_URL + images[Image2]
 
 	response := Response{
-		Image1: IMAGE1_URL,
-		Image2: IMAGE2_URL,
+		Image1: *img1,
+		Image2: *img2,
 	}
 
 	json.NewEncoder(w).Encode(response)
