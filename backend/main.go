@@ -53,6 +53,8 @@ func (server *Server) MountHandlers() {
 		r.Get("/images", handle_imagelist)
 	})
 
+	server.Router.Handle(IMAGES_URL+"*", http.StripPrefix(IMAGES_URL, http.FileServer(http.Dir(IMAGES_DIR))))
+
 	server.Router.Mount("/api", apiRouter)
 }
 
