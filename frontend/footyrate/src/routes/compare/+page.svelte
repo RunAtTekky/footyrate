@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { onMount } from "svelte";
+
     // State for selected image
     let selected = $state(0);
     // State for image URLs from API
@@ -37,7 +39,9 @@
     }
     
     // Load initial images
-    fetchRandomImages();
+    onMount(() => {
+        fetchRandomImages();
+    });
 </script>
 
 <style>
