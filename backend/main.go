@@ -9,7 +9,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 )
 
 // Response struct to send back JSON with image URLs
@@ -33,9 +32,6 @@ func enableCors(w *http.ResponseWriter) {
 }
 
 func main() {
-	// Seed the random number generator
-	rand.Seed(time.Now().UnixNano())
-
 	// Set up the API endpoint for random images
 	http.HandleFunc(RANDOM_PATH, func(w http.ResponseWriter, r *http.Request) {
 		// Enable CORS for all requests
