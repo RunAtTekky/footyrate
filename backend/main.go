@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 )
 
@@ -26,12 +26,6 @@ const (
 	IMAGES_URL  = "/images/" // URL path to access images
 	RANDOM_PATH = "/api/random-images"
 )
-
-// func enableCors(w *http.ResponseWriter) {
-// 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-// 	(*w).Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-// 	(*w).Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-// }
 
 type Server struct {
 	Router *chi.Mux
@@ -55,16 +49,18 @@ func (server *Server) MountHandlers() {
 	apiRouter := chi.NewRouter()
 
 	apiRouter.Group(func(r chi.Router) {
-		// r.Get("/random", get_random)
-		// r.Get("/imagelist", get_image_list)
-		r.Get("/random-images", get_random)
-		r.Get("/images", get_image_list)
+		r.Get("/random-images", handle_random)
+		r.Get("/images", handle_imagelist)
 	})
 
 	server.Router.Mount("/api", apiRouter)
 }
 
-func get_random(w http.ResponseWriter, r *http.Request) {
+func handle_random(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
 	w.WriteHeader(http.StatusOK)
 
 	images, err := getImagesList()
@@ -74,34 +70,35 @@ func get_random(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	baseURL := getBaseURL(r)
+
+	IMAGE1_URL := baseURL + IMAGES_URL + images[0]
+	IMAGE2_URL := baseURL + IMAGES_URL + images[1]
+
 	response := Response{
-		Image1: images[0],
-		Image2: images[1],
+		Image1: IMAGE1_URL,
+		Image2: IMAGE2_URL,
 	}
 
 	json.NewEncoder(w).Encode(response)
-
-	// w.Write([]byte("Random"))
 }
 
-func get_image_list(w http.ResponseWriter, r *http.Request) {
+func handle_imagelist(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
 	w.WriteHeader(http.StatusOK)
 
 	images, err := getImagesList()
 
 	if err != nil {
 		fmt.Println("Error getting images")
+		w.Write([]byte("LOL Error getting the images"))
 		return
 	}
 
-	baseURL := getBaseURL(r)
-
-	for _, image := range images {
-		final_URL := baseURL + IMAGES_URL + image
-		fmt.Println(final_URL)
-	}
-
-	w.Write([]byte("Image list"))
+	json.NewEncoder(w).Encode(images)
 }
 
 func main() {
@@ -148,84 +145,11 @@ func main() {
 	}))
 
 	server.MountHandlers()
-	// Set up the API endpoint for random images
-	// http.HandleFunc(RANDOM_PATH, func(w http.ResponseWriter, r *http.Request) {
-	// 	// Enable CORS for all requests
-	// 	enableCors(&w)
-
-	// 	// Handle preflight OPTIONS requests
-	// 	if r.Method == "OPTIONS" {
-	// 		w.WriteHeader(http.StatusOK)
-	// 		return
-	// 	}
-
-	// 	randomImagesHandler(w, r)
-	// })
-
-	// // Set up static file server for images with CORS support
-	// http.HandleFunc(IMAGES_URL, func(w http.ResponseWriter, r *http.Request) {
-	// 	// Enable CORS for image requests
-	// 	enableCors(&w)
-
-	// 	// Handle preflight OPTIONS requests
-	// 	if r.Method == "OPTIONS" {
-	// 		w.WriteHeader(http.StatusOK)
-	// 		return
-	// 	}
-
-	// 	// Strip the prefix and serve the files
-	// 	fileServer := http.StripPrefix(IMAGES_URL, http.FileServer(http.Dir(IMAGES_DIR)))
-	// 	fileServer.ServeHTTP(w, r)
-	// })
 
 	// Start the server
 	log.Printf("Server started on http://localhost:8080")
 	http.ListenAndServe(":8080", server.Router)
 }
-
-// func randomImagesHandler(w http.ResponseWriter, r *http.Request) {
-// 	// Set content type for JSON response
-// 	w.Header().Set("Content-Type", "application/json")
-
-// 	// Get list of available images
-// 	images, err := getImagesList()
-// 	if err != nil {
-// 		http.Error(w, "Failed to get images list", http.StatusInternalServerError)
-// 		log.Printf("Error getting images list: %v", err)
-// 		return
-// 	}
-
-// 	// If we have fewer than 2 images, return an error
-// 	if len(images) < 2 {
-// 		http.Error(w, "Not enough images available", http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	// Select two random images
-// 	image1, image2 := selectTwoRandomImages(images)
-
-// 	// Create the image URLs
-// 	baseURL := getBaseURL(r)
-// 	image1URL := baseURL + IMAGES_URL + image1
-// 	image2URL := baseURL + IMAGES_URL + image2
-
-// 	// Create and send the response
-// 	response := Response{
-// 		Image1: image1URL,
-// 		Image2: image2URL,
-// 	}
-
-// 	// Marshal the response to JSON
-// 	jsonResponse, err := json.Marshal(response)
-// 	if err != nil {
-// 		http.Error(w, "Failed to create JSON response", http.StatusInternalServerError)
-// 		log.Printf("Error marshaling JSON: %v", err)
-// 		return
-// 	}
-
-// 	// Send the response
-// 	w.Write(jsonResponse)
-// }
 
 // getImagesList returns a list of image filenames from the images directory
 func getImagesList() ([]string, error) {
@@ -263,27 +187,6 @@ func getImagesList() ([]string, error) {
 
 	return images, err
 }
-
-// selectTwoRandomImages selects two different random images from the given list
-// func selectTwoRandomImages(images []string) (string, string) {
-// 	// If we have exactly 2 images, return both
-// 	if len(images) == 2 {
-// 		return images[0], images[1]
-// 	}
-
-// 	// Get first random image
-// 	idx1 := rand.Intn(len(images))
-// 	image1 := images[idx1]
-
-// 	// Get second random image (must be different from the first)
-// 	idx2 := idx1
-// 	for idx2 == idx1 {
-// 		idx2 = rand.Intn(len(images))
-// 	}
-// 	image2 := images[idx2]
-
-// 	return image1, image2
-// }
 
 // getBaseURL constructs the base URL from the request
 func getBaseURL(r *http.Request) string {
