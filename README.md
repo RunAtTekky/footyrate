@@ -33,7 +33,9 @@ The backend server shuts down after inactivity and takes a long time to start ba
 So when you open the website after the server has shut down, it will take some time before showing you the images.
 
 ## TODO
-- [ ] Implement variable K value
+- [x] Implement variable K value
+- [x] Standings
+- [x] Add styling to standings
 - [ ] Database to have persistent ratings
 - [ ] Responsive website
 - [x] Reduce image size for faster loading

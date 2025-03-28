@@ -11,8 +11,8 @@
 
     let Image_List: ImageData[];
 
-    // const API_RESULT = "http://localhost:8080/api/images"
-    const API_RESULT = "https://footyrate.onrender.com/api/images"
+    const API_RESULT = "http://localhost:8080/api/images"
+    // const API_RESULT = "https://footyrate.onrender.com/api/images"
 
     function sort_standings() {
         Image_List.sort((a,b) => b.elo - a.elo);
@@ -43,14 +43,14 @@
 
 <h2>Standings</h2>
 
-<table>
+<table class="zigzag">
     <thead>
 
     <tr>
-        <th>NAME</th>
-        <th>K_FACTOR</th>
-        <th>ROUNDS</th>
-        <th>ELO</th>
+        <th class="header">NAME</th>
+        <th class="header">K_FACTOR</th>
+        <th class="header">ROUNDS</th>
+        <th class="header">ELO</th>
     </tr>
     </thead>
 
@@ -65,3 +65,42 @@
     {/each}
     </tbody>
 </table>
+
+<style>
+    h1 {
+  color:#c00;
+  font-family:sans-serif;
+  font-size:2em;
+  margin-bottom:0;
+}
+
+table {  
+  font-family:sans-serif;
+  th, td {
+    padding:.25em .5em;
+    text-align:left;
+    &:nth-child(2) {
+      text-align:right;
+    }
+  }
+  td {
+    background-color:#eee;    
+  }
+  th {
+    background-color:#009;
+    color:#fff;
+  }
+}
+
+.zigzag {
+  border-collapse:separate;
+  border-spacing:.25em 1em;
+  tbody tr:nth-child(odd) {
+    transform:rotate(2deg);
+  }
+  thead tr,
+  tbody tr:nth-child(even) {
+    transform:rotate(-2deg);
+  }
+}
+</style>
