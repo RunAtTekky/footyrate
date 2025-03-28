@@ -49,9 +49,7 @@
             }
 
             const data = await response.json();
-            console.log(data.winner)
-
-            // await fetchRandomImages();
+            console.log("This ID WON: ", data.winner_ID)
         } catch(err) {
             console.error("Error occurred submitting vote", err);
         }

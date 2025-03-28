@@ -90,11 +90,7 @@ func handle_result(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// fmt.Printf("Winner %d \n Loser %d\n\n", result.Winner_ID, result.Loser_ID)
-
 	compute_result(result)
-
-	// w.Write([]byte(result.Winner))
 
 	json.NewEncoder(w).Encode(result)
 }
@@ -140,13 +136,6 @@ func handle_random(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 
-	// images, err := getImagesList()
-
-	// if err != nil {
-	// 	fmt.Println("Error getting random images")
-	// 	return
-	// }
-
 	baseURL := getBaseURL(r)
 
 	Image1_idx, Image2_idx := get_two_images(&Images)
@@ -156,17 +145,6 @@ func handle_random(w http.ResponseWriter, r *http.Request) {
 
 	img1.URL = baseURL + IMAGES_URL + img1.URL
 	img2.URL = baseURL + IMAGES_URL + img2.URL
-
-	// img1 := Image{
-	// 	ID:  Image1_idx,
-	// 	URL: baseURL + IMAGES_URL + images[Image1_idx],
-	// 	ELO: 1400,
-	// }
-	// img2 := Image{
-	// 	ID:  Image2_idx,
-	// 	URL: baseURL + IMAGES_URL + images[Image2_idx],
-	// 	ELO: 1400,
-	// }
 
 	response := Response{
 		Image1: img1,
@@ -201,20 +179,17 @@ func handle_imagelist(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 
-	// images, err := getImagesList()
-
-	// if err != nil {
-	// 	fmt.Println("Error getting images")
-	// 	w.Write([]byte("LOL Error getting the images"))
-	// 	return
-	// }
-
 	json.NewEncoder(w).Encode(Images)
 }
 
 func main() {
 
-	getImagesList()
+	err := getImagesList()
+
+	if err != nil {
+		log.Fatalf("Error occurred in getting images")
+		return
+	}
 
 	server := CreateServer()
 
@@ -265,16 +240,13 @@ func main() {
 }
 
 // getImagesList returns a list of image filenames from the images directory
-func getImagesList() ([]string, error) {
-	var images []string
-
-	var curr_ID int = 1
+func getImagesList() error {
 
 	// Create images directory if it doesn't exist
 	if _, err := os.Stat(IMAGES_DIR); os.IsNotExist(err) {
 		log.Printf("Creating images directory: %s", IMAGES_DIR)
 		if err := os.MkdirAll(IMAGES_DIR, 0755); err != nil {
-			return nil, err
+			return err
 		}
 	}
 
@@ -295,19 +267,17 @@ func getImagesList() ([]string, error) {
 			if err != nil {
 				return err
 			}
-			images = append(images, relPath)
 			image := Image{
 				ID:  len(Images),
 				URL: relPath,
 				ELO: 1400,
 			}
 			Images = append(Images, image)
-			curr_ID++
 		}
 		return nil
 	})
 
-	return images, err
+	return err
 }
 
 // getBaseURL constructs the base URL from the request
