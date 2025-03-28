@@ -17,7 +17,7 @@ When two players are compared, their ratings change according to the given formu
 ```python
 ELO_DIFFERENCE = WINNER_CURRENT_ELO - LOSER_CURRENT_ELO
 
-Expected = 1 / (10 ** (ELO DIFFERENCE/400) + 1)
+Expected = 1 / (10 ** (ELO_DIFFERENCE/400) + 1)
 
 K = 20
 
@@ -27,10 +27,15 @@ winner_ELO += ELO_change
 loser_ELO -= ELO_change
 ```
 
+## Onrender Problem
+The backend server shuts down after inactivity and takes a long time to start back up.
+
+So when you open the website after the server has shut down, it will take some time before showing you the images.
+
 ## TODO
 - [ ] Implement variable K value
 - [ ] Database to have persistent ratings
 - [ ] Responsive website
-- [ ] Reduce image size for faster loading
+- [x] Reduce image size for faster loading
 - [ ] Better images without watermark
 
