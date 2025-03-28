@@ -11,8 +11,8 @@
 
     let Image_List: ImageData[];
 
-    const API_RESULT = "http://localhost:8080/api/images"
-    // const API_RESULT = "https://footyrate.onrender.com/api/images"
+    // const API_RESULT = "http://localhost:8080/api/images"
+    const API_RESULT = "https://footyrate.onrender.com/api/images"
 
     function sort_standings() {
         Image_List.sort((a,b) => b.elo - a.elo);
