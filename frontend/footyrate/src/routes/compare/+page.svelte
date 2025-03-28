@@ -29,7 +29,7 @@
     let selected = $state(0);
     // State for image URLs from API
     let loading = $state(true);
-    const IMAGE_HEIGHT = '300px';
+    const IMAGE_HEIGHT = '250px';
     
     // API URL
     // const API_URL = 'http://localhost:8080/api/random-images';
@@ -112,21 +112,41 @@
     }
     container {
         display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        width: 100%;
+
+        /* display: grid;
         justify-content: space-around;
         align-items: center;
         width: 95%;
         background-color: #C9E4E7;
         border-radius: 10px;
-        padding: 20px;
+        padding: 20px; */
     }
-    button {
-        width: 50%;
-        margin: 20px;
+    container button {
+        flex: 1;
+        min-width: 300px; /* Adjust this value based on your needs */
         border: none;
-        transition: 0.3s;
+        padding: 0;
         background: none;
+        transition: 0.3s;
         cursor: pointer;
     }
+    
+    container img {
+        width: 100%;
+        height: auto;
+        max-height: var(--IMAGE_HEIGHT);
+        object-fit: contain;
+    }
+
+    @media (max-width: 768px) {
+        container button {
+        flex-basis: 100%;
+        }
+    }
+
     button:hover {
         transform: scale(1.05);
     }
@@ -154,9 +174,11 @@
         <container>
             <button onclick={() => handle_selection(1)}>
                 <img src={Image1.url} height={IMAGE_HEIGHT} alt="First">
+                <!-- <img src={Image1.url} alt="First"> -->
             </button>
             <button onclick={() => handle_selection(2)}>
                 <img src={Image2.url} height={IMAGE_HEIGHT} alt="Second">
+                <!-- <img src={Image2.url} alt="Second"> -->
             </button>
         </container>
         
