@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math"
 	"math/rand/v2"
 	"net/http"
 	"os"
@@ -111,14 +112,25 @@ func compute_result(result *Result) {
 func update_ELO(winner_ID int, loser_ID int) {
 	// TODO - Write logic for updating elo
 
-	fmt.Println("Winner's ID is", winner_ID)
-	fmt.Println("Loser's ID is", loser_ID)
+	winner_ELO := Images[winner_ID].ELO
+	loser_ELO := Images[loser_ID].ELO
 
-	Images[winner_ID].ELO = 1500
-	Images[loser_ID].ELO = 1400
+	var difference_ELO float32 = float32(winner_ELO) - float32(loser_ELO)
 
-	fmt.Println("Winner's ELO is", Images[winner_ID].ELO)
-	fmt.Println("Loser's ELO is", Images[loser_ID].ELO)
+	expected := 1 / (math.Pow(10, float64(difference_ELO/400)) + 1)
+
+	K := 20.0
+
+	ELO_change := K * (1 - expected)
+
+	winner_ELO += int(ELO_change)
+	loser_ELO -= int(ELO_change)
+
+	Images[winner_ID].ELO = winner_ELO
+	Images[loser_ID].ELO = loser_ELO
+
+	fmt.Printf("ID: %d ELO: %d\n", winner_ID, Images[winner_ID].ELO)
+	fmt.Printf("ID: %d ELO: %d\n\n", loser_ID, Images[loser_ID].ELO)
 }
 
 func handle_random(w http.ResponseWriter, r *http.Request) {
@@ -189,15 +201,15 @@ func handle_imagelist(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 
-	images, err := getImagesList()
+	// images, err := getImagesList()
 
-	if err != nil {
-		fmt.Println("Error getting images")
-		w.Write([]byte("LOL Error getting the images"))
-		return
-	}
+	// if err != nil {
+	// 	fmt.Println("Error getting images")
+	// 	w.Write([]byte("LOL Error getting the images"))
+	// 	return
+	// }
 
-	json.NewEncoder(w).Encode(images)
+	json.NewEncoder(w).Encode(Images)
 }
 
 func main() {
