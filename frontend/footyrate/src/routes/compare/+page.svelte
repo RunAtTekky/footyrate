@@ -26,8 +26,8 @@
     const IMAGE_HEIGHT = '300px';
     
     // API URL
-    const API_URL = 'http://localhost:8080/api/random-images';
-    const API_RESULT = 'http://localhost:8080/api/result';
+    const API_URL = 'https://footyrate.onrender.com/api/random-images';
+    const API_RESULT = 'https://footyrate.onrender.com/api/result';
 
     async function submit_vote(winnerID: number, loserID: number) {
         try {
