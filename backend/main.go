@@ -243,10 +243,10 @@ func main() {
 		// AllowedOrigins specifies the allowed origins
 		// Use "*" to allow all origins (not recommended for production)
 		AllowedOrigins: []string{
-			"*",
-			"http://localhost:5173", // React app
-			// "https://footyrate.vercel.app", // Production frontend
-			// "http://localhost:8080",    // Vue/Angular dev server
+			// "*",
+			"http://localhost:5173",        // React app
+			"https://footyrate.vercel.app", // Production frontend
+			"http://localhost:8080",        // Vue/Angular dev server
 		},
 
 		// AllowedMethods specifies the allowed HTTP methods
