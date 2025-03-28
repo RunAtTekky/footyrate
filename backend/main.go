@@ -27,9 +27,11 @@ type Response struct {
 }
 
 type Result struct {
-	Winner string `json:"winner"`
-	Loser  string `json:"loser"`
+	Winner_ID int `json:"winner_ID"`
+	Loser_ID  int `json:"loser_ID"`
 }
+
+var Images []Image
 
 // Configuration settings
 const (
@@ -87,11 +89,36 @@ func handle_result(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Winner %s \n Loser %s\n\n", result.Winner, result.Loser)
+	// fmt.Printf("Winner %d \n Loser %d\n\n", result.Winner_ID, result.Loser_ID)
+
+	compute_result(result)
 
 	// w.Write([]byte(result.Winner))
 
 	json.NewEncoder(w).Encode(result)
+}
+
+func compute_result(result *Result) {
+
+	// result.Winner
+	winner_ID := result.Winner_ID
+	loser_ID := result.Loser_ID
+
+	update_ELO(winner_ID, loser_ID)
+
+}
+
+func update_ELO(winner_ID int, loser_ID int) {
+	// TODO - Write logic for updating elo
+
+	fmt.Println("Winner's ID is", winner_ID)
+	fmt.Println("Loser's ID is", loser_ID)
+
+	Images[winner_ID].ELO = 1500
+	Images[loser_ID].ELO = 1400
+
+	fmt.Println("Winner's ELO is", Images[winner_ID].ELO)
+	fmt.Println("Loser's ELO is", Images[loser_ID].ELO)
 }
 
 func handle_random(w http.ResponseWriter, r *http.Request) {
@@ -101,27 +128,33 @@ func handle_random(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 
-	images, err := getImagesList()
+	// images, err := getImagesList()
 
-	if err != nil {
-		fmt.Println("Error getting random images")
-		return
-	}
+	// if err != nil {
+	// 	fmt.Println("Error getting random images")
+	// 	return
+	// }
 
 	baseURL := getBaseURL(r)
 
-	Image1_idx, Image2_idx := get_two_images(&images)
+	Image1_idx, Image2_idx := get_two_images(&Images)
 
-	img1 := Image{
-		ID:  Image1_idx,
-		URL: baseURL + IMAGES_URL + images[Image1_idx],
-		ELO: 1400,
-	}
-	img2 := Image{
-		ID:  Image2_idx,
-		URL: baseURL + IMAGES_URL + images[Image2_idx],
-		ELO: 1400,
-	}
+	img1 := Images[Image1_idx]
+	img2 := Images[Image2_idx]
+
+	img1.URL = baseURL + IMAGES_URL + img1.URL
+	img2.URL = baseURL + IMAGES_URL + img2.URL
+
+	// img1 := Image{
+	// 	ID:  Image1_idx,
+	// 	URL: baseURL + IMAGES_URL + images[Image1_idx],
+	// 	ELO: 1400,
+	// }
+	// img2 := Image{
+	// 	ID:  Image2_idx,
+	// 	URL: baseURL + IMAGES_URL + images[Image2_idx],
+	// 	ELO: 1400,
+	// }
 
 	response := Response{
 		Image1: img1,
@@ -131,7 +164,7 @@ func handle_random(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func get_two_images(images *[]string) (int, int) {
+func get_two_images(images *[]Image) (int, int) {
 
 	var image1 int
 	var image2 int
@@ -168,6 +201,8 @@ func handle_imagelist(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+
+	getImagesList()
 
 	server := CreateServer()
 
@@ -221,6 +256,8 @@ func main() {
 func getImagesList() ([]string, error) {
 	var images []string
 
+	var curr_ID int = 1
+
 	// Create images directory if it doesn't exist
 	if _, err := os.Stat(IMAGES_DIR); os.IsNotExist(err) {
 		log.Printf("Creating images directory: %s", IMAGES_DIR)
@@ -247,6 +284,13 @@ func getImagesList() ([]string, error) {
 				return err
 			}
 			images = append(images, relPath)
+			image := Image{
+				ID:  len(Images),
+				URL: relPath,
+				ELO: 1400,
+			}
+			Images = append(Images, image)
+			curr_ID++
 		}
 		return nil
 	})
