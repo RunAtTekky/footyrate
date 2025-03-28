@@ -16,9 +16,11 @@ import (
 )
 
 type Image struct {
-	ID  int    `json:"id"`
-	URL string `json:"url"`
-	ELO int    `json:"elo"`
+	ID       int    `json:"id"`
+	URL      string `json:"url"`
+	ELO      int    `json:"elo"`
+	K_FACTOR int    `json:"k_factor"`
+	ROUNDS   int    `json:"rounds"`
 }
 
 // Response struct to send back JSON with image URLs
@@ -111,22 +113,65 @@ func update_ELO(winner_ID int, loser_ID int) {
 	winner_ELO := Images[winner_ID].ELO
 	loser_ELO := Images[loser_ID].ELO
 
+	K_WINNER := float64(Images[winner_ID].K_FACTOR)
+	K_LOSER := float64(Images[loser_ID].K_FACTOR)
+
 	var difference_ELO float32 = float32(winner_ELO) - float32(loser_ELO)
 
 	expected := 1 / (math.Pow(10, float64(difference_ELO/400)) + 1)
 
-	K := 20.0
+	ELO_change_winner := K_WINNER * (1 - expected)
+	ELO_change_loser := K_LOSER * (1 - expected)
 
-	ELO_change := K * (1 - expected)
-
-	winner_ELO += int(ELO_change)
-	loser_ELO -= int(ELO_change)
+	winner_ELO += int(ELO_change_winner)
+	loser_ELO -= int(ELO_change_loser)
 
 	Images[winner_ID].ELO = winner_ELO
 	Images[loser_ID].ELO = loser_ELO
 
-	fmt.Printf("ID: %d ELO: %d\n", winner_ID, Images[winner_ID].ELO)
-	fmt.Printf("ID: %d ELO: %d\n\n", loser_ID, Images[loser_ID].ELO)
+	Images[winner_ID].ROUNDS += 1
+	Images[loser_ID].ROUNDS += 1
+
+	winner_rounds := Images[winner_ID].ROUNDS
+	switch {
+	case winner_rounds > 30:
+		Images[winner_ID].K_FACTOR = 10
+	case winner_rounds > 20:
+		Images[winner_ID].K_FACTOR = 20
+	case winner_rounds > 10:
+		Images[winner_ID].K_FACTOR = 30
+	}
+
+	loser_rounds := Images[loser_ID].ROUNDS
+	switch {
+	case loser_rounds > 30:
+		Images[loser_ID].K_FACTOR = 10
+	case loser_rounds > 20:
+		Images[loser_ID].K_FACTOR = 20
+	case loser_rounds > 10:
+		Images[loser_ID].K_FACTOR = 30
+	}
+
+	WINNER := &Images[winner_ID]
+	LOSER := &Images[loser_ID]
+
+	fmt.Printf(`
+WINNER
+ID: %d
+ELO %d
+K_FACTOR %d
+ROUNDS %d
+
+`, WINNER.ID, WINNER.ELO, WINNER.K_FACTOR, WINNER.ROUNDS)
+
+	fmt.Printf(`
+LOSER
+ID: %d
+ELO %d
+K_FACTOR %d
+ROUNDS %d
+
+`, LOSER.ID, LOSER.ELO, LOSER.K_FACTOR, LOSER.ROUNDS)
 }
 
 func handle_random(w http.ResponseWriter, r *http.Request) {
@@ -198,9 +243,9 @@ func main() {
 		// AllowedOrigins specifies the allowed origins
 		// Use "*" to allow all origins (not recommended for production)
 		AllowedOrigins: []string{
-			// "*",
-			"http://localhost:5173",        // React app
-			"https://footyrate.vercel.app", // Production frontend
+			"*",
+			"http://localhost:5173", // React app
+			// "https://footyrate.vercel.app", // Production frontend
 			// "http://localhost:8080",    // Vue/Angular dev server
 		},
 
@@ -268,9 +313,11 @@ func getImagesList() error {
 				return err
 			}
 			image := Image{
-				ID:  len(Images),
-				URL: relPath,
-				ELO: 1400,
+				ID:       len(Images),
+				URL:      relPath,
+				ELO:      1400,
+				K_FACTOR: 40,
+				ROUNDS:   0,
 			}
 			Images = append(Images, image)
 		}

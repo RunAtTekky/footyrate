@@ -5,18 +5,24 @@
         id: number;
         url: string;
         elo: number;
+        k_factor: number;
+        rounds: number;
     }
 
     let Image1: ImageData = $state({
         id: 6,
         url: "",
         elo: 1400,
+        k_factor: 40,
+        rounds: 0,
     });
 
     let Image2: ImageData = $state({
         id: 9,
         url: "",
         elo: 1400,
+        k_factor: 40,
+        rounds: 0,
     });
 
     // State for selected image
@@ -26,8 +32,10 @@
     const IMAGE_HEIGHT = '300px';
     
     // API URL
-    const API_URL = 'https://footyrate.onrender.com/api/random-images';
-    const API_RESULT = 'https://footyrate.onrender.com/api/result';
+    const API_URL = 'http://localhost:8080/api/random-images';
+    const API_RESULT = 'http://localhost:8080/api/result';
+    // const API_URL = 'https://footyrate.onrender.com/api/random-images';
+    // const API_RESULT = 'https://footyrate.onrender.com/api/result';
 
     async function submit_vote(winnerID: number, loserID: number) {
         try {
@@ -42,14 +50,9 @@
                 })
             })
 
-            console.log(winnerID, loserID)
-
             if (!response.ok) {
                 throw new Error('Error submitting vote');
             }
-
-            const data = await response.json();
-            console.log("This ID WON: ", data.winner_ID)
         } catch(err) {
             console.error("Error occurred submitting vote", err);
         }
@@ -66,9 +69,6 @@
             const data = await response.json();
             Image1 = data.image1;
             Image2 = data.image2;
-
-            console.log("First ID", Image1.id)
-            console.log("Second ID", Image2.id)
 
             // Reset selection when new images are loaded
             selected = 0;
