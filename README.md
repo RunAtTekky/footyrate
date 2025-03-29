@@ -36,6 +36,7 @@ So when you open the website after the server has shut down, it will take some t
 - [x] Implement variable K value
 - [x] Standings
 - [x] Add styling to standings
+- [ ] Left and Right button to select players
 - [ ] Database to have persistent ratings
 - [x] Responsive website
 - [x] Reduce image size for faster loading

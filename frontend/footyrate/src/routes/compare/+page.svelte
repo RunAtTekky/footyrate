@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from "svelte";
+	import { onDestroy, onMount } from "svelte";
 
     interface ImageData {
         id: number;
@@ -92,10 +92,27 @@
         handle_vote(n);
         fetchRandomImages();
     }
+
+    function handleKeyDown(e: KeyboardEvent) {
+		 switch(e.key) {
+			 case 'ArrowLeft':
+                handle_selection(1);
+				break;
+			 case 'ArrowRight':
+                handle_selection(2);
+				break;
+		 }
+         console.log("KEYPRESSED");
+	}
     
     // Load initial images
     onMount(() => {
         fetchRandomImages();
+        window.addEventListener('keydown', handleKeyDown);
+    });
+
+    onDestroy(() => {
+        window.removeEventListener('keydown', handleKeyDown);
     });
 </script>
 
