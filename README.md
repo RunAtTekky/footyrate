@@ -19,7 +19,7 @@ ELO_DIFFERENCE = WINNER_CURRENT_ELO - LOSER_CURRENT_ELO
 
 Expected = 1 / (10 ** (ELO_DIFFERENCE/400) + 1)
 
-K = 20
+K = (10 if ROUNDS > 30, 20 if ROUNDS > 20, 30 if ROUNDS > 10, 40 if ROUNDS <= 10)
 
 ELO_change = K * (1 - expected)
 
@@ -37,7 +37,7 @@ So when you open the website after the server has shut down, it will take some t
 - [x] Standings
 - [x] Add styling to standings
 - [ ] Database to have persistent ratings
-- [ ] Responsive website
+- [x] Responsive website
 - [x] Reduce image size for faster loading
 - [ ] Better images without watermark
 

@@ -41,33 +41,44 @@
     });
 </script>
 
-<h2>Standings</h2>
+<main>
+  <h1>Standings</h1>
 
-<table class="zigzag">
-    <thead>
+  <table class="zigzag">
+      <thead>
 
-    <tr>
-        <th class="header">NAME</th>
-        <th class="header">K_FACTOR</th>
-        <th class="header">ROUNDS</th>
-        <th class="header">ELO</th>
-    </tr>
-    </thead>
+      <tr>
+          <th class="header">NAME</th>
+          <th class="header">K_FACTOR</th>
+          <th class="header">ROUNDS</th>
+          <th class="header">ELO</th>
+      </tr>
+      </thead>
 
-    <tbody>
-    {#each Image_List as image}
-    <tr>
-            <td>{image.url}</td>
-            <td>{image.k_factor}</td>
-            <td>{image.rounds}</td>
-            <td>{image.elo}</td>
-    </tr>
-    {/each}
-    </tbody>
-</table>
+      <tbody>
+      {#each Image_List as image}
+      <tr>
+              <td>{image.url}</td>
+              <td>{image.k_factor}</td>
+              <td>{image.rounds}</td>
+              <td>{image.elo}</td>
+      </tr>
+      {/each}
+      </tbody>
+  </table>
+
+</main>
+
 
 <style>
-    h1 {
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+h1 {
   color:#c00;
   font-family:sans-serif;
   font-size:2em;
