@@ -105,61 +105,46 @@ func handle_result(w http.ResponseWriter, r *http.Request) {
 
 func compute_result(result *Result) {
 
-	// result.Winner
-	winner_ID := result.Winner_ID
-	loser_ID := result.Loser_ID
+	winner := &Images[result.Winner_ID]
+	loser := &Images[result.Loser_ID]
 
-	update_ELO(winner_ID, loser_ID)
+	update_ELO(winner, loser)
 
 }
 
-func update_ELO(winner_ID int, loser_ID int) {
+func update_ELO(winner *Image, loser *Image) {
 	// TODO - Write logic for updating elo
 
-	winner_ELO := Images[winner_ID].ELO
-	loser_ELO := Images[loser_ID].ELO
-
-	K_WINNER := float64(Images[winner_ID].K_FACTOR)
-	K_LOSER := float64(Images[loser_ID].K_FACTOR)
-
-	var difference_ELO float32 = float32(winner_ELO) - float32(loser_ELO)
+	var difference_ELO float32 = float32(winner.ELO) - float32(loser.ELO)
 
 	expected := 1 / (math.Pow(10, float64(difference_ELO/400)) + 1)
 
-	ELO_change_winner := K_WINNER * (1 - expected)
-	ELO_change_loser := K_LOSER * (1 - expected)
+	ELO_change_winner := float64(winner.K_FACTOR) * (1 - expected)
+	ELO_change_loser := float64(loser.K_FACTOR) * (1 - expected)
 
-	winner_ELO += int(ELO_change_winner)
-	loser_ELO -= int(ELO_change_loser)
+	winner.ELO += int(ELO_change_winner)
+	loser.ELO -= int(ELO_change_loser)
 
-	Images[winner_ID].ELO = winner_ELO
-	Images[loser_ID].ELO = loser_ELO
+	winner.ROUNDS += 1
+	loser.ROUNDS += 1
 
-	Images[winner_ID].ROUNDS += 1
-	Images[loser_ID].ROUNDS += 1
-
-	winner_rounds := Images[winner_ID].ROUNDS
 	switch {
-	case winner_rounds > 30:
-		Images[winner_ID].K_FACTOR = 10
-	case winner_rounds > 20:
-		Images[winner_ID].K_FACTOR = 20
-	case winner_rounds > 10:
-		Images[winner_ID].K_FACTOR = 30
+	case winner.ROUNDS > 30:
+		winner.K_FACTOR = 10
+	case winner.ROUNDS > 20:
+		winner.K_FACTOR = 20
+	case winner.ROUNDS > 10:
+		winner.K_FACTOR = 30
 	}
 
-	loser_rounds := Images[loser_ID].ROUNDS
 	switch {
-	case loser_rounds > 30:
-		Images[loser_ID].K_FACTOR = 10
-	case loser_rounds > 20:
-		Images[loser_ID].K_FACTOR = 20
-	case loser_rounds > 10:
-		Images[loser_ID].K_FACTOR = 30
+	case loser.ROUNDS > 30:
+		loser.K_FACTOR = 10
+	case loser.ROUNDS > 20:
+		loser.K_FACTOR = 20
+	case loser.ROUNDS > 10:
+		loser.K_FACTOR = 30
 	}
-
-	WINNER := &Images[winner_ID]
-	LOSER := &Images[loser_ID]
 
 	fmt.Printf(`
 WINNER
@@ -168,7 +153,7 @@ ELO %d
 K_FACTOR %d
 ROUNDS %d
 
-`, WINNER.ID, WINNER.ELO, WINNER.K_FACTOR, WINNER.ROUNDS)
+`, winner.ID, winner.ELO, winner.K_FACTOR, winner.ROUNDS)
 
 	fmt.Printf(`
 LOSER
@@ -177,7 +162,7 @@ ELO %d
 K_FACTOR %d
 ROUNDS %d
 
-`, LOSER.ID, LOSER.ELO, LOSER.K_FACTOR, LOSER.ROUNDS)
+`, loser.ID, loser.ELO, loser.K_FACTOR, loser.ROUNDS)
 }
 
 func handle_random(w http.ResponseWriter, r *http.Request) {
