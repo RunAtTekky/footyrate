@@ -55,13 +55,19 @@ func CreateServer() *Server {
 	return server
 }
 
-func hello(w http.ResponseWriter, r *http.Request) {
+func greeting(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Hello"))
+	data := `Welcome to FootyRate
+
+These are the endpoints you can use
+/random-images : get two random images
+/images : get all the images list
+/result : send votes`
+	w.Write([]byte(data))
 }
 
 func (server *Server) MountHandlers() {
-	server.Router.Get("/", hello)
+	server.Router.Get("/", greeting)
 
 	apiRouter := chi.NewRouter()
 
@@ -227,16 +233,7 @@ func handle_imagelist(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(Images)
 }
 
-func main() {
-
-	err := getImagesList()
-
-	if err != nil {
-		log.Fatalf("Error occurred in getting images")
-		return
-	}
-
-	server := CreateServer()
+func configure_CORS(server *Server) {
 
 	// CORS Middleware Configuration
 	server.Router.Use(cors.Handler(cors.Options{
@@ -276,12 +273,26 @@ func main() {
 		// MaxAge specifies how long preflight request can be cached
 		MaxAge: 300, // 5 minutes
 	}))
+}
+
+func main() {
+
+	err := getImagesList()
+
+	if err != nil {
+		log.Fatalf("Error occurred in getting images")
+		return
+	}
+
+	server := CreateServer()
+
+	configure_CORS(server)
 
 	server.MountHandlers()
 
 	// Start the server
-	log.Printf("Server started on http://localhost:8080")
-	http.ListenAndServe(":8080", server.Router)
+	log.Printf("Server started on http://localhost:%d", PORT)
+	http.ListenAndServe(fmt.Sprintf(":%d", PORT), server.Router)
 }
 
 // getImagesList returns a list of image filenames from the images directory
