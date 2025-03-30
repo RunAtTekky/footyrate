@@ -174,7 +174,7 @@ func handle_random(w http.ResponseWriter, r *http.Request) {
 
 	baseURL := getBaseURL(r)
 
-	Image1_idx, Image2_idx := get_two_images(&Images)
+	Image1_idx, Image2_idx := get_two_random_indexes(len(Images))
 
 	img1 := Images[Image1_idx]
 	img2 := Images[Image2_idx]
@@ -190,21 +190,19 @@ func handle_random(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func get_two_images(images *[]Image) (int, int) {
+func get_two_random_indexes(n int) (int, int) {
 
-	var image1 int
-	var image2 int
+	var idx1 int
+	var idx2 int
 
-	n := len(*images)
+	idx1 = rand.IntN(n)
+	idx2 = rand.IntN(n)
 
-	image1 = rand.IntN(n)
-	image2 = rand.IntN(n)
-
-	for image1 == image2 {
-		image2 = rand.IntN(n)
+	for idx1 == idx2 {
+		idx2 = rand.IntN(n)
 	}
 
-	return image1, image2
+	return idx1, idx2
 
 }
 
