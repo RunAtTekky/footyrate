@@ -3,9 +3,17 @@ package models
 import (
 	"database/sql"
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
+	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 )
+
+const IMAGES_DIR = "../images"
+
+var All_Players Players
 
 func Setup_DB() (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", "./players.db")
@@ -74,4 +82,61 @@ func (players *Players) Update_Rounds(image Image) {
 		fmt.Printf("Error updating ROUNDS %v", err)
 		return
 	}
+}
+
+func (players *Players) GetImagesList() error {
+	fmt.Println("Getting images YAY")
+
+	// Create images directory if it doesn't exist
+	if _, err := os.Stat(IMAGES_DIR); os.IsNotExist(err) {
+		log.Printf("Creating images directory: %s", IMAGES_DIR)
+		if err := os.MkdirAll(IMAGES_DIR, 0755); err != nil {
+			return err
+		}
+	}
+
+	// Walk through the images directory
+	err := filepath.Walk(IMAGES_DIR, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			fmt.Printf("Error walking through this image %v\n", err)
+			return err
+		}
+		// Skip directories
+		if info.IsDir() {
+			return nil
+		}
+		// Check if the file is an image based on extension
+		ext := strings.ToLower(filepath.Ext(path))
+		if ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif" || ext == ".webp" {
+			// Get just the filename without the directory path
+			relPath, err := filepath.Rel(IMAGES_DIR, path)
+			if err != nil {
+				return err
+			}
+			image := Image{
+				ID:       len(players.Images),
+				URL:      relPath,
+				ELO:      1400,
+				K_FACTOR: 40,
+				ROUNDS:   0,
+			}
+			players.Images = append(players.Images, image)
+
+			players.Add_Player(image)
+
+			fmt.Printf("Added player %s\n", image.URL)
+		}
+		// fmt.Printf("Added player %s\n", image.URL)
+		return nil
+	})
+
+	if err != nil {
+		fmt.Printf("Error walking through images %v\n", err)
+	} else {
+		fmt.Println("Walked through the images directory no problemo")
+	}
+
+	fmt.Println(players.Images)
+
+	return err
 }

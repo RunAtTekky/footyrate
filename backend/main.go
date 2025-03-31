@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"image_compare/handlers"
 	"image_compare/models"
 	"image_compare/server"
 	"log"
@@ -28,7 +27,7 @@ func main() {
 	// 	DB:     db,
 	// }
 
-	handlers.All_Players.Images = []models.Image{
+	models.All_Players.Images = []models.Image{
 		{
 			ID:       0,
 			URL:      "Cris",
@@ -37,18 +36,18 @@ func main() {
 			ROUNDS:   5,
 		},
 	}
-	handlers.All_Players.DB = db
+	models.All_Players.DB = db
+
+	// Load the database
+	models.All_Players.Load_DB()
 
 	// Load the images
-	err = handlers.GetImagesList()
+	err = models.All_Players.GetImagesList()
 
 	if err != nil {
 		log.Fatalf("Error occurred in getting images")
 		return
 	}
-
-	// Load the database
-	handlers.All_Players.Load_DB()
 
 	// Server
 	srv := server.CreateServer()
