@@ -64,20 +64,20 @@ func (players *Players) Load_DB() {
 	players.Images = player_list
 }
 
-func (players *Players) Add_Player(image Image) {
+func (players *Players) Add_Player(image *Image) {
 
-	_, err := players.DB.Exec("INSERT INTO players (id, url, elo, k_factor, rounds) VALUES (?, ?, ?, ?, ?)", image.ID, image.URL, image.ELO, image.K_FACTOR, image.ROUNDS)
+	_, err := players.DB.Exec("INSERT INTO players (url, elo, k_factor, rounds) VALUES (?, ?, ?, ?, ?)", image.URL, image.ELO, image.K_FACTOR, image.ROUNDS)
 
 	if err != nil {
 		fmt.Printf("Error adding player %v", err)
 		return
 	}
 
-	players.Images = append(players.Images, image)
+	players.Images = append(players.Images, *image)
 
 }
 
-func (players *Players) Update_ELO(image Image) {
+func (players *Players) Update_ELO(image *Image) {
 
 	_, err := players.DB.Exec("UPDATE players SET elo = ? WHERE id = ?", image.ELO, image.ID)
 
@@ -88,7 +88,7 @@ func (players *Players) Update_ELO(image Image) {
 
 }
 
-func (players *Players) Update_Rounds(image Image) {
+func (players *Players) Update_Rounds(image *Image) {
 
 	_, err := players.DB.Exec("UPDATE players SET rounds = rounds + ? WHERE id = ?", 1, image.ID)
 

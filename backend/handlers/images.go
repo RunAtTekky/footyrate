@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-var Images []models.Image
+var players models.Players
 
 const IMAGES_DIR = "./images"
 
@@ -42,13 +42,13 @@ func GetImagesList() error {
 				return err
 			}
 			image := models.Image{
-				ID:       len(Images),
+				ID:       len(players.Images),
 				URL:      relPath,
 				ELO:      1400,
 				K_FACTOR: 40,
 				ROUNDS:   0,
 			}
-			Images = append(Images, image)
+			players.Images = append(players.Images, image)
 		}
 		return nil
 	})
@@ -63,5 +63,5 @@ func Handle_imagelist(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 
-	json.NewEncoder(w).Encode(Images)
+	json.NewEncoder(w).Encode(players.Images)
 }
