@@ -22,7 +22,6 @@ func Setup_DB() (*sql.DB, error) {
 		elo INTEGER NOT NULL DEFAULT 1400,
 		k_factor INTEGER NOT NULL DEFAULT 40,
 		rounds INTEGER NOT NULL DEFAULT 0
-
 	);
 	`
 
@@ -64,7 +63,7 @@ func (players *Players) Load_DB() {
 	players.Images = player_list
 }
 
-func (players *Players) Add_Player(image *Image) {
+func (players *Players) Add_Player(image Image) {
 
 	_, err := players.DB.Exec("INSERT INTO players (id, url, elo, k_factor, rounds) VALUES (?, ?, ?, ?, ?)", image.ID, image.URL, image.ELO, image.K_FACTOR, image.ROUNDS)
 
@@ -73,11 +72,11 @@ func (players *Players) Add_Player(image *Image) {
 		return
 	}
 
-	players.Images = append(players.Images, *image)
+	players.Images = append(players.Images, image)
 
 }
 
-func (players *Players) Update_ELO(image *Image) {
+func (players *Players) Update_ELO(image Image) {
 
 	_, err := players.DB.Exec("UPDATE players SET elo = ? WHERE id = ?", image.ELO, image.ID)
 
@@ -88,7 +87,7 @@ func (players *Players) Update_ELO(image *Image) {
 
 }
 
-func (players *Players) Update_Rounds(image *Image) {
+func (players *Players) Update_Rounds(image Image) {
 
 	_, err := players.DB.Exec("UPDATE players SET rounds = rounds + ? WHERE id = ?", 1, image.ID)
 

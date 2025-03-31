@@ -23,9 +23,6 @@ func main() {
 
 	db.Close()
 
-	// Load the database
-	handlers.All_Players.Load_DB()
-
 	// Load the images
 	err = handlers.GetImagesList()
 
@@ -33,6 +30,9 @@ func main() {
 		log.Fatalf("Error occurred in getting images")
 		return
 	}
+
+	// Load the database
+	handlers.All_Players.Load_DB()
 
 	// Server
 	srv := server.CreateServer()

@@ -12,7 +12,7 @@ import (
 
 var All_Players models.Players
 
-const IMAGES_DIR = "./images"
+const IMAGES_DIR = "../images"
 
 func GetImagesList() error {
 
@@ -50,7 +50,7 @@ func GetImagesList() error {
 			}
 			All_Players.Images = append(All_Players.Images, image)
 
-			All_Players.Add_Player(&image)
+			All_Players.Add_Player(image)
 		}
 		return nil
 	})

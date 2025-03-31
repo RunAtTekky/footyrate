@@ -36,11 +36,11 @@ func compute_result(result *models.Result) {
 
 	update_ELO(winner, loser)
 
-	All_Players.Update_ELO(winner)
-	All_Players.Update_ELO(loser)
+	All_Players.Update_ELO(*winner)
+	All_Players.Update_ELO(*loser)
 
-	All_Players.Update_Rounds(winner)
-	All_Players.Update_Rounds(loser)
+	All_Players.Update_Rounds(*winner)
+	All_Players.Update_Rounds(*loser)
 }
 
 func update_ELO(winner *models.Image, loser *models.Image) {

@@ -10,8 +10,8 @@ import (
 // Configuration settings
 const (
 	PORT        = 8080
-	IMAGES_DIR  = "./images" // Directory containing your images
-	IMAGES_URL  = "/images/" // URL path to access images
+	IMAGES_DIR  = "../images" // Directory containing your images
+	IMAGES_URL  = "/images/"  // URL path to access images
 	RANDOM_PATH = "/api/random-images"
 )
 
