@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"image_compare/models"
 	"log"
 	"net/http"
@@ -51,6 +52,8 @@ func GetImagesList() error {
 			All_Players.Images = append(All_Players.Images, image)
 
 			All_Players.Add_Player(image)
+
+			fmt.Printf("Added player %s\n", image.URL)
 		}
 		return nil
 	})

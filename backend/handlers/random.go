@@ -19,6 +19,7 @@ func Handle_random(w http.ResponseWriter, r *http.Request) {
 
 	baseURL := getBaseURL(r)
 
+	fmt.Printf("Length of All_Players.Images %d\n", len(All_Players.Images))
 	Image1_idx, Image2_idx := get_two_random_indexes(len(All_Players.Images))
 
 	img1 := All_Players.Images[Image1_idx]
@@ -26,6 +27,9 @@ func Handle_random(w http.ResponseWriter, r *http.Request) {
 
 	img1.URL = baseURL + IMAGES_URL + img1.URL
 	img2.URL = baseURL + IMAGES_URL + img2.URL
+
+	fmt.Printf("Image 1: %s", img1.URL)
+	fmt.Printf("Image 2: %s", img2.URL)
 
 	response := models.Response{
 		Image1: img1,

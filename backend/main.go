@@ -21,7 +21,23 @@ func main() {
 		return
 	}
 
-	db.Close()
+	defer db.Close()
+
+	// All_Players := &models.Players{
+	// 	Images: []models.Image{},
+	// 	DB:     db,
+	// }
+
+	handlers.All_Players.Images = []models.Image{
+		{
+			ID:       0,
+			URL:      "Cris",
+			K_FACTOR: 40,
+			ELO:      1600,
+			ROUNDS:   5,
+		},
+	}
+	handlers.All_Players.DB = db
 
 	// Load the images
 	err = handlers.GetImagesList()
