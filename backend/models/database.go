@@ -45,7 +45,7 @@ func (players *Players) Load_DB() {
 		return
 	}
 	defer rows.Close()
-	// var player_list []Image
+
 	for rows.Next() {
 		var image Image
 		err := rows.Scan(&image.ID, &image.URL, &image.ELO, &image.K_FACTOR, &image.ROUNDS)
@@ -57,8 +57,6 @@ func (players *Players) Load_DB() {
 	}
 
 	fmt.Println("Loaded the DB")
-
-	// players.Images = player_list
 }
 
 func (players *Players) Add_Player(image Image) {
@@ -137,7 +135,6 @@ func (players *Players) GetImagesList() error {
 				K_FACTOR: 40,
 				ROUNDS:   0,
 			}
-			// players.Images = append(players.Images, image)
 
 			players.Add_Player(image)
 

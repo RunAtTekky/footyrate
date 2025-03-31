@@ -22,21 +22,7 @@ func main() {
 
 	defer db.Close()
 
-	// All_Players := &models.Players{
-	// 	Images: []models.Image{},
-	// 	DB:     db,
-	// }
-
 	models.All_Players.Images = []models.Image{}
-	// models.All_Players.Images = []models.Image{
-	// 	{
-	// 		ID:       0,
-	// 		URL:      "Cris",
-	// 		K_FACTOR: 40,
-	// 		ELO:      1600,
-	// 		ROUNDS:   5,
-	// 	},
-	// }
 	models.All_Players.DB = db
 
 	// Load the database
