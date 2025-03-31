@@ -62,7 +62,20 @@ func (players *Players) Load_DB() {
 }
 
 func (players *Players) Add_Player(image Image) {
-	_, err := players.DB.Exec("INSERT INTO players (id, url, elo, k_factor, rounds) VALUES (?, ?, ?, ?, ?)", image.ID, image.URL, image.ELO, image.K_FACTOR, image.ROUNDS)
+	var exists bool
+	err := players.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM players WHERE url = ?)", image.URL).Scan(&exists)
+
+	if err != nil {
+		fmt.Printf("Error checking existence of player %v\n", err)
+		return
+	}
+
+	if exists {
+		fmt.Printf("Player %s already exists\n", image.URL)
+		return
+	}
+
+	_, err = players.DB.Exec("INSERT INTO players (id, url, elo, k_factor, rounds) VALUES (?, ?, ?, ?, ?)", image.ID, image.URL, image.ELO, image.K_FACTOR, image.ROUNDS)
 	if err != nil {
 		fmt.Printf("Error adding player %v", err)
 		return
