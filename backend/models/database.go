@@ -11,7 +11,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const IMAGES_DIR = "../images"
+const IMAGES_DIR = "./images"
 
 var All_Players Players
 
@@ -45,7 +45,7 @@ func (players *Players) Load_DB() {
 		return
 	}
 	defer rows.Close()
-	var player_list []Image
+	// var player_list []Image
 	for rows.Next() {
 		var image Image
 		err := rows.Scan(&image.ID, &image.URL, &image.ELO, &image.K_FACTOR, &image.ROUNDS)
@@ -53,9 +53,12 @@ func (players *Players) Load_DB() {
 			fmt.Printf("Error scanning row %v", err)
 			continue
 		}
-		player_list = append(player_list, image)
+		players.Images = append(players.Images, image)
 	}
-	players.Images = player_list
+
+	fmt.Println("Loaded the DB")
+
+	// players.Images = player_list
 }
 
 func (players *Players) Add_Player(image Image) {
@@ -97,6 +100,7 @@ func (players *Players) GetImagesList() error {
 
 	// Walk through the images directory
 	err := filepath.Walk(IMAGES_DIR, func(path string, info os.FileInfo, err error) error {
+		fmt.Printf("Path: %s\n", path)
 		if err != nil {
 			fmt.Printf("Error walking through this image %v\n", err)
 			return err
@@ -120,13 +124,12 @@ func (players *Players) GetImagesList() error {
 				K_FACTOR: 40,
 				ROUNDS:   0,
 			}
-			players.Images = append(players.Images, image)
+			// players.Images = append(players.Images, image)
 
 			players.Add_Player(image)
 
 			fmt.Printf("Added player %s\n", image.URL)
 		}
-		// fmt.Printf("Added player %s\n", image.URL)
 		return nil
 	})
 

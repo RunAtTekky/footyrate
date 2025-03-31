@@ -28,8 +28,8 @@ func Handle_random(w http.ResponseWriter, r *http.Request) {
 	img1.URL = baseURL + IMAGES_URL + img1.URL
 	img2.URL = baseURL + IMAGES_URL + img2.URL
 
-	fmt.Printf("Image 1: %s", img1.URL)
-	fmt.Printf("Image 2: %s", img2.URL)
+	fmt.Printf("Image 1: %s\n", img1.URL)
+	fmt.Printf("Image 2: %s\n", img2.URL)
 
 	response := models.Response{
 		Image1: img1,
