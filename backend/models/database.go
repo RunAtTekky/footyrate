@@ -17,7 +17,7 @@ func Setup_DB() (*sql.DB, error) {
 
 	create_table_sql := `
 	CREATE TABLE IF NOT EXISTS players (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		id INTEGER PRIMARY KEY,
 		url TEXT NOT NULL,
 		elo INTEGER NOT NULL DEFAULT 1400,
 		k_factor INTEGER NOT NULL DEFAULT 40,
@@ -66,7 +66,7 @@ func (players *Players) Load_DB() {
 
 func (players *Players) Add_Player(image *Image) {
 
-	_, err := players.DB.Exec("INSERT INTO players (url, elo, k_factor, rounds) VALUES (?, ?, ?, ?, ?)", image.URL, image.ELO, image.K_FACTOR, image.ROUNDS)
+	_, err := players.DB.Exec("INSERT INTO players (id, url, elo, k_factor, rounds) VALUES (?, ?, ?, ?, ?)", image.ID, image.URL, image.ELO, image.K_FACTOR, image.ROUNDS)
 
 	if err != nil {
 		fmt.Printf("Error adding player %v", err)

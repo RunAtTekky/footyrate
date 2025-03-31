@@ -8,8 +8,6 @@ import (
 	"net/http"
 )
 
-// var players models.Players
-
 func Handle_result(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "OPTIONS" {
@@ -33,16 +31,16 @@ func Handle_result(w http.ResponseWriter, r *http.Request) {
 
 func compute_result(result *models.Result) {
 
-	winner := &players.Images[result.Winner_ID]
-	loser := &players.Images[result.Loser_ID]
+	winner := &All_Players.Images[result.Winner_ID]
+	loser := &All_Players.Images[result.Loser_ID]
 
 	update_ELO(winner, loser)
 
-	players.Update_ELO(winner)
-	players.Update_ELO(loser)
+	All_Players.Update_ELO(winner)
+	All_Players.Update_ELO(loser)
 
-	players.Update_Rounds(winner)
-	players.Update_Rounds(loser)
+	All_Players.Update_Rounds(winner)
+	All_Players.Update_Rounds(loser)
 }
 
 func update_ELO(winner *models.Image, loser *models.Image) {

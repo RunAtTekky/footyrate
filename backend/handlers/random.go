@@ -19,10 +19,10 @@ func Handle_random(w http.ResponseWriter, r *http.Request) {
 
 	baseURL := getBaseURL(r)
 
-	Image1_idx, Image2_idx := get_two_random_indexes(len(players.Images))
+	Image1_idx, Image2_idx := get_two_random_indexes(len(All_Players.Images))
 
-	img1 := players.Images[Image1_idx]
-	img2 := players.Images[Image2_idx]
+	img1 := All_Players.Images[Image1_idx]
+	img2 := All_Players.Images[Image2_idx]
 
 	img1.URL = baseURL + IMAGES_URL + img1.URL
 	img2.URL = baseURL + IMAGES_URL + img2.URL
