@@ -31,16 +31,29 @@ func Handle_result(w http.ResponseWriter, r *http.Request) {
 
 func compute_result(result *models.Result) {
 
-	winner := &models.All_Players.Images[result.Winner_ID]
-	loser := &models.All_Players.Images[result.Loser_ID]
+	var winner_idx int = -1
+	var loser_idx int = -1
 
-	update_ELO(winner, loser)
+	for idx := range models.All_Players.Images {
+		if models.All_Players.Images[idx].ID == result.Winner_ID {
+			winner_idx = idx
+		}
+		if models.All_Players.Images[idx].ID == result.Loser_ID {
+			loser_idx = idx
+		}
 
-	models.All_Players.Update_ELO(*winner)
-	models.All_Players.Update_ELO(*loser)
+		if winner_idx != -1 && loser_idx != -1 {
+			break
+		}
+	}
 
-	models.All_Players.Update_Rounds(*winner)
-	models.All_Players.Update_Rounds(*loser)
+	update_ELO(&models.All_Players.Images[winner_idx], &models.All_Players.Images[loser_idx])
+
+	models.All_Players.Update_ELO(models.All_Players.Images[winner_idx])
+	models.All_Players.Update_ELO(models.All_Players.Images[loser_idx])
+
+	models.All_Players.Update_Rounds(models.All_Players.Images[winner_idx])
+	models.All_Players.Update_Rounds(models.All_Players.Images[loser_idx])
 }
 
 func update_ELO(winner *models.Image, loser *models.Image) {
