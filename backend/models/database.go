@@ -153,5 +153,7 @@ func (players *Players) GetImagesList() error {
 		fmt.Println("Walked through the images directory no problemo")
 	}
 
+	fmt.Printf("Total images: %d\n", len(players.Images))
+
 	return err
 }
