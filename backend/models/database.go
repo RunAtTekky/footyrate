@@ -73,12 +73,20 @@ func (players *Players) Add_Player(image Image) {
 		return
 	}
 
-	_, err = players.DB.Exec("INSERT INTO players (id, url, elo, k_factor, rounds) VALUES (?, ?, ?, ?, ?)", image.ID, image.URL, image.ELO, image.K_FACTOR, image.ROUNDS)
+	result, err := players.DB.Exec("INSERT INTO players (url, elo, k_factor, rounds) VALUES (?, ?, ?, ?)", image.URL, image.ELO, image.K_FACTOR, image.ROUNDS)
 	if err != nil {
 		fmt.Printf("Error adding player %v", err)
 		return
 	}
-	fmt.Printf("Added player into DB %s\n", image.URL)
+
+	id, err := result.LastInsertId()
+
+	if err != nil {
+		fmt.Printf("Error getting last ID %v\n", err)
+		return
+	}
+	image.ID = int(id)
+
 	players.Images = append(players.Images, image)
 }
 
@@ -99,7 +107,6 @@ func (players *Players) Update_Rounds(image Image) {
 }
 
 func (players *Players) GetImagesList() error {
-	fmt.Println("Getting images YAY")
 
 	// Create images directory if it doesn't exist
 	if _, err := os.Stat(IMAGES_DIR); os.IsNotExist(err) {
@@ -111,7 +118,6 @@ func (players *Players) GetImagesList() error {
 
 	// Walk through the images directory
 	err := filepath.Walk(IMAGES_DIR, func(path string, info os.FileInfo, err error) error {
-		fmt.Printf("Path: %s\n", path)
 		if err != nil {
 			fmt.Printf("Error walking through this image %v\n", err)
 			return err
@@ -129,7 +135,7 @@ func (players *Players) GetImagesList() error {
 				return err
 			}
 			image := Image{
-				ID:       len(players.Images),
+				ID:       0,
 				URL:      relPath,
 				ELO:      1400,
 				K_FACTOR: 40,
@@ -137,8 +143,6 @@ func (players *Players) GetImagesList() error {
 			}
 
 			players.Add_Player(image)
-
-			fmt.Printf("Added player %s\n", image.URL)
 		}
 		return nil
 	})
@@ -148,8 +152,6 @@ func (players *Players) GetImagesList() error {
 	} else {
 		fmt.Println("Walked through the images directory no problemo")
 	}
-
-	fmt.Println(players.Images)
 
 	return err
 }
