@@ -49,11 +49,11 @@ func compute_result(result *models.Result) {
 
 	update_ELO(&models.All_Players.Player_List[winner_idx], &models.All_Players.Player_List[loser_idx])
 
-	models.All_Players.Update_ELO(models.All_Players.Player_List[winner_idx])
-	models.All_Players.Update_ELO(models.All_Players.Player_List[loser_idx])
+	models.All_Players.Update_ELO(&models.All_Players.Player_List[winner_idx])
+	models.All_Players.Update_ELO(&models.All_Players.Player_List[loser_idx])
 
-	models.All_Players.Update_Rounds(models.All_Players.Player_List[winner_idx])
-	models.All_Players.Update_Rounds(models.All_Players.Player_List[loser_idx])
+	models.All_Players.Update_Rounds(&models.All_Players.Player_List[winner_idx])
+	models.All_Players.Update_Rounds(&models.All_Players.Player_List[loser_idx])
 }
 
 func update_ELO(winner *models.Player, loser *models.Player) {

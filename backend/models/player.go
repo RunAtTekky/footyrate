@@ -1,9 +1,11 @@
 package models
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 type Player struct {
-	ID       int    `json:"id"`
-	URL      string `json:"url"`
-	ELO      int    `json:"elo"`
-	K_FACTOR int    `json:"k_factor"`
-	ROUNDS   int    `json:"rounds"`
+	ID       primitive.ObjectID `bson:"_id" json:"id"`
+	URL      string             `bson:"url" json:"url"`
+	ELO      int                `bson:"elo" json:"elo"`
+	K_FACTOR int                `bson:"k_factor" json:"k_factor"`
+	ROUNDS   int                `bson:"rounds" json:"rounds"`
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"image_compare/models"
 	"image_compare/server"
@@ -20,16 +21,31 @@ func main() {
 		return
 	}
 
-	defer db.Close()
+	defer func() {
+		if err := db.Client().Disconnect(context.TODO()); err != nil {
+			panic(err)
+		}
+	}()
+
+	// players := models.Players{
+	// 	Player_List: models.Player_list,
+	// 	DB:          db,
+	// }
 
 	models.All_Players.Player_List = []models.Player{}
 	models.All_Players.DB = db
 
 	// Load the database
-	models.All_Players.Load_DB()
+	err = models.All_Players.Get_Players()
+	if err != nil {
+		log.Fatalf("Error occurred in loading database")
+		return
+	}
+	// models.All_Players.Load_DB()
 
 	// Load the images
 	err = models.All_Players.GetImagesList()
+	// err = models.All_Players.GetImagesList()
 
 	if err != nil {
 		log.Fatalf("Error occurred in getting images")
