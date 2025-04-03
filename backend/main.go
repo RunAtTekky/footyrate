@@ -27,25 +27,18 @@ func main() {
 		}
 	}()
 
-	// players := models.Players{
-	// 	Player_List: models.Player_list,
-	// 	DB:          db,
-	// }
-
 	models.All_Players.Player_List = []models.Player{}
 	models.All_Players.DB = db
 
-	// Load the database
+	// Get all the players from the database
 	err = models.All_Players.Get_Players()
 	if err != nil {
 		log.Fatalf("Error occurred in loading database")
 		return
 	}
-	// models.All_Players.Load_DB()
 
 	// Load the images
 	err = models.All_Players.GetImagesList()
-	// err = models.All_Players.GetImagesList()
 
 	if err != nil {
 		log.Fatalf("Error occurred in getting images")

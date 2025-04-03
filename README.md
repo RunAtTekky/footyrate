@@ -38,7 +38,7 @@ So when you open the website after the server has shut down, it will take some t
 - [x] Add styling to standings
 - [x] Left and Right button to select players
 - [x] Database to have persistent ratings
-    - [ ] Switch to mongoDB
+    - [x] Switch to mongoDB
 - [x] Responsive website
 - [x] Reduce image size for faster loading
 - [ ] Better images without watermark
