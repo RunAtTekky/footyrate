@@ -34,11 +34,11 @@ func compute_result(result *models.Result) {
 	var winner_idx int = -1
 	var loser_idx int = -1
 
-	for idx := range models.All_Players.Images {
-		if models.All_Players.Images[idx].ID == result.Winner_ID {
+	for idx := range models.All_Players.Player_List {
+		if models.All_Players.Player_List[idx].ID == result.Winner_ID {
 			winner_idx = idx
 		}
-		if models.All_Players.Images[idx].ID == result.Loser_ID {
+		if models.All_Players.Player_List[idx].ID == result.Loser_ID {
 			loser_idx = idx
 		}
 
@@ -47,16 +47,16 @@ func compute_result(result *models.Result) {
 		}
 	}
 
-	update_ELO(&models.All_Players.Images[winner_idx], &models.All_Players.Images[loser_idx])
+	update_ELO(&models.All_Players.Player_List[winner_idx], &models.All_Players.Player_List[loser_idx])
 
-	models.All_Players.Update_ELO(models.All_Players.Images[winner_idx])
-	models.All_Players.Update_ELO(models.All_Players.Images[loser_idx])
+	models.All_Players.Update_ELO(models.All_Players.Player_List[winner_idx])
+	models.All_Players.Update_ELO(models.All_Players.Player_List[loser_idx])
 
-	models.All_Players.Update_Rounds(models.All_Players.Images[winner_idx])
-	models.All_Players.Update_Rounds(models.All_Players.Images[loser_idx])
+	models.All_Players.Update_Rounds(models.All_Players.Player_List[winner_idx])
+	models.All_Players.Update_Rounds(models.All_Players.Player_List[loser_idx])
 }
 
-func update_ELO(winner *models.Image, loser *models.Image) {
+func update_ELO(winner *models.Player, loser *models.Player) {
 	// TODO - Write logic for updating elo
 
 	var difference_ELO float32 = float32(winner.ELO) - float32(loser.ELO)
@@ -76,7 +76,7 @@ func update_ELO(winner *models.Image, loser *models.Image) {
 	update_K_factor(loser)
 }
 
-func update_K_factor(player *models.Image) {
+func update_K_factor(player *models.Player) {
 	switch {
 	case player.ROUNDS > 30:
 		player.K_FACTOR = 10

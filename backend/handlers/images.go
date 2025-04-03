@@ -13,5 +13,5 @@ func Handle_imagelist(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 
-	json.NewEncoder(w).Encode(models.All_Players.Images)
+	json.NewEncoder(w).Encode(models.All_Players.Player_List)
 }

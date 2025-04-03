@@ -22,7 +22,7 @@ func main() {
 
 	defer db.Close()
 
-	models.All_Players.Images = []models.Image{}
+	models.All_Players.Player_List = []models.Player{}
 	models.All_Players.DB = db
 
 	// Load the database

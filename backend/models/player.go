@@ -1,6 +1,6 @@
 package models
 
-type Image struct {
+type Player struct {
 	ID       int    `json:"id"`
 	URL      string `json:"url"`
 	ELO      int    `json:"elo"`

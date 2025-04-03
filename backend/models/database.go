@@ -47,21 +47,21 @@ func (players *Players) Load_DB() {
 	defer rows.Close()
 
 	for rows.Next() {
-		var image Image
-		err := rows.Scan(&image.ID, &image.URL, &image.ELO, &image.K_FACTOR, &image.ROUNDS)
+		var player Player
+		err := rows.Scan(&player.ID, &player.URL, &player.ELO, &player.K_FACTOR, &player.ROUNDS)
 		if err != nil {
 			fmt.Printf("Error scanning row %v", err)
 			continue
 		}
-		players.Images = append(players.Images, image)
+		players.Player_List = append(players.Player_List, player)
 	}
 
 	fmt.Println("Loaded the DB")
 }
 
-func (players *Players) Add_Player(image Image) {
+func (players *Players) Add_Player(player Player) {
 	var exists bool
-	err := players.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM players WHERE url = ?)", image.URL).Scan(&exists)
+	err := players.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM players WHERE url = ?)", player.URL).Scan(&exists)
 
 	if err != nil {
 		fmt.Printf("Error checking existence of player %v\n", err)
@@ -69,11 +69,11 @@ func (players *Players) Add_Player(image Image) {
 	}
 
 	if exists {
-		fmt.Printf("Player %s already exists\n", image.URL)
+		fmt.Printf("Player %s already exists\n", player.URL)
 		return
 	}
 
-	result, err := players.DB.Exec("INSERT INTO players (url, elo, k_factor, rounds) VALUES (?, ?, ?, ?)", image.URL, image.ELO, image.K_FACTOR, image.ROUNDS)
+	result, err := players.DB.Exec("INSERT INTO players (url, elo, k_factor, rounds) VALUES (?, ?, ?, ?)", player.URL, player.ELO, player.K_FACTOR, player.ROUNDS)
 	if err != nil {
 		fmt.Printf("Error adding player %v", err)
 		return
@@ -85,21 +85,21 @@ func (players *Players) Add_Player(image Image) {
 		fmt.Printf("Error getting last ID %v\n", err)
 		return
 	}
-	image.ID = int(id)
+	player.ID = int(id)
 
-	players.Images = append(players.Images, image)
+	players.Player_List = append(players.Player_List, player)
 }
 
-func (players *Players) Update_ELO(image Image) {
-	_, err := players.DB.Exec("UPDATE players SET elo = ? WHERE id = ?", image.ELO, image.ID)
+func (players *Players) Update_ELO(player Player) {
+	_, err := players.DB.Exec("UPDATE players SET elo = ? WHERE id = ?", player.ELO, player.ID)
 	if err != nil {
 		fmt.Printf("Error updating ELO %v", err)
 		return
 	}
 }
 
-func (players *Players) Update_Rounds(image Image) {
-	_, err := players.DB.Exec("UPDATE players SET rounds = rounds + ? WHERE id = ?", 1, image.ID)
+func (players *Players) Update_Rounds(player Player) {
+	_, err := players.DB.Exec("UPDATE players SET rounds = rounds + ? WHERE id = ?", 1, player.ID)
 	if err != nil {
 		fmt.Printf("Error updating ROUNDS %v", err)
 		return
@@ -134,7 +134,7 @@ func (players *Players) GetImagesList() error {
 			if err != nil {
 				return err
 			}
-			image := Image{
+			image := Player{
 				ID:       0,
 				URL:      relPath,
 				ELO:      1400,
@@ -153,7 +153,7 @@ func (players *Players) GetImagesList() error {
 		fmt.Println("Walked through the images directory no problemo")
 	}
 
-	fmt.Printf("Total images: %d\n", len(players.Images))
+	fmt.Printf("Total images: %d\n", len(players.Player_List))
 
 	return err
 }

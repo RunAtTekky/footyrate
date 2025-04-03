@@ -7,6 +7,6 @@ import (
 )
 
 type Players struct {
-	Images []Image
-	DB     *sql.DB
+	Player_List []Player
+	DB          *sql.DB
 }
