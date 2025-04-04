@@ -72,6 +72,21 @@ func (players *Players) Add_Player(player *Player) {
 	All_Players.Player_List = append(All_Players.Player_List, *player)
 }
 
+func (players *Players) Update_K_Factor(player *Player) {
+
+	coll := players.DB.Collection("players")
+
+	filter := bson.D{{Key: "url", Value: player.URL}}
+
+	update := bson.D{{Key: "$set", Value: bson.D{{Key: "k_factor", Value: player.K_FACTOR}}}}
+
+	_, err := coll.UpdateOne(context.TODO(), filter, update)
+
+	if err != nil {
+		fmt.Printf("Error updating player's rounds %v\n", err)
+	}
+}
+
 func (players *Players) Update_Rounds(player *Player) {
 
 	coll := players.DB.Collection("players")

@@ -47,13 +47,19 @@ func compute_result(result *models.Result) {
 		}
 	}
 
-	update_ELO(&models.All_Players.Player_List[winner_idx], &models.All_Players.Player_List[loser_idx])
+	winner := &models.All_Players.Player_List[winner_idx]
+	loser := &models.All_Players.Player_List[loser_idx]
 
-	models.All_Players.Update_ELO(&models.All_Players.Player_List[winner_idx])
-	models.All_Players.Update_ELO(&models.All_Players.Player_List[loser_idx])
+	update_ELO(winner, loser)
 
-	models.All_Players.Update_Rounds(&models.All_Players.Player_List[winner_idx])
-	models.All_Players.Update_Rounds(&models.All_Players.Player_List[loser_idx])
+	models.All_Players.Update_ELO(winner)
+	models.All_Players.Update_ELO(loser)
+
+	models.All_Players.Update_K_Factor(winner)
+	models.All_Players.Update_K_Factor(loser)
+
+	models.All_Players.Update_Rounds(winner)
+	models.All_Players.Update_Rounds(loser)
 }
 
 func update_ELO(winner *models.Player, loser *models.Player) {
