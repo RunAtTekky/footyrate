@@ -7,11 +7,19 @@ import (
 	"image_compare/server"
 	"log"
 	"net/http"
+
+	"github.com/robfig/cron"
 )
 
 const PORT = 8080
+const API = "https://footyrate.onrender.com"
 
 func main() {
+
+	c := cron.New()
+	c.AddFunc("@every 14m", ping_server)
+	log.Println("Started cron job")
+	c.Start()
 
 	// Setup database
 	db, err := models.Setup_DB()
@@ -55,4 +63,19 @@ func main() {
 	// Start the server
 	log.Printf("Server started on http://localhost:%d", PORT)
 	http.ListenAndServe(fmt.Sprintf(":%d", PORT), srv.Router)
+
+	select {}
+}
+
+func ping_server() {
+
+	res, err := http.Get(API)
+
+	if err != nil {
+		fmt.Printf("Error getting response from server %v", err)
+	}
+
+	res.Body.Close()
+
+	println("Pinged the server")
 }
