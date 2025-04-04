@@ -29,7 +29,7 @@
     let selected = $state(0);
     // State for image URLs from API
     let loading = $state(true);
-    const IMAGE_HEIGHT = '250px';
+    const IMAGE_HEIGHT = '100px';
 
     const HOST = import.meta.env.DEV ? "http://localhost:8080" : "https://footyrate.onrender.com";
 
@@ -117,69 +117,100 @@
 </script>
 
 <style>
-    * {
-        padding: 0;
-        margin: 0;
-    }
-    main {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 30px;
-        width: 100%;
+* {
+    padding: 0;
+    margin: 0;
+}
 
-        /* display: grid;
-        justify-content: space-around;
-        align-items: center;
-        width: 95%;
-        background-color: #C9E4E7;
-        border-radius: 10px;
-        padding: 20px; */
+
+main {
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(#CAFFD0, #C9E4E7, #CA3CFF, #CA3CFF);
+}
+h1 {
+    font-style: italic;
+    font-size: 3rem;
+}
+p {
+    font-size: 1rem;
+    font-weight: 800;
+}
+container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 30px;
+    width: 100%;
+    /* border: solid 2px blue; */
+}
+button {
+    display: flex;
+    width: 40%;
+    height: 600px;
+    justify-content: center;
+    min-width: 300px; /* Adjust this value based on your needs */
+    border: none;
+    padding: 0;
+    background: none;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    max-height: var(--IMAGE_HEIGHT);
+    object-fit: contain;
+}
+
+@media (max-width: 450px) {
+    container {
+        justify-content: start;
+        gap: 0;
     }
     container button {
-        flex: 1;
-        min-width: 300px; /* Adjust this value based on your needs */
-        border: none;
-        padding: 0;
-        background: none;
-        transition: 0.3s;
-        cursor: pointer;
-    }
-    
-    container img {
-        width: 100%;
-        height: auto;
-        max-height: var(--IMAGE_HEIGHT);
-        object-fit: contain;
-    }
-
-    @media (max-width: 768px) {
-        container button {
         flex-basis: 100%;
-        }
+        height: 50vh;
     }
+    h1 {
+        position: absolute;
+        top: 45%;
+        z-index: 3;
+        color: azure;
+        font-size: 3rem;
+    }
+    p {
+        display: none;
+    }
+    img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        /* filter: blur(2px); */
+    }
+}
 
-    button:hover {
-        transform: scale(1.05);
-    }
-    button:active {
-        transform: translateY(4px);
-    }
-    .result {
-        padding-top: 20px;
-        margin-bottom: 20px;
-    }
-    .loading {
-        height: 300px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+button:hover {
+    transform: scale(1.05);
+}
+button:active {
+    transform: translateY(4px);
+}
+.result {
+    padding-top: 20px;
+    margin-bottom: 20px;
+}
+.loading {
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 </style>
 
 <main>
@@ -190,11 +221,13 @@
     {:else}
         <container>
             <button onclick={() => handle_selection(1)}>
-                <img src={Image1.url} height={IMAGE_HEIGHT} alt="First">
+                <!-- <img src={Image1.url} height={IMAGE_HEIGHT} alt="First"> -->
+                <img src={Image1.url} alt="First">
                 <!-- <img src={Image1.url} alt="First"> -->
             </button>
             <button onclick={() => handle_selection(2)}>
-                <img src={Image2.url} height={IMAGE_HEIGHT} alt="Second">
+                <!-- <img src={Image2.url} height={IMAGE_HEIGHT} alt="Second"> -->
+                <img src={Image2.url} alt="Second">
                 <!-- <img src={Image2.url} alt="Second"> -->
             </button>
         </container>
