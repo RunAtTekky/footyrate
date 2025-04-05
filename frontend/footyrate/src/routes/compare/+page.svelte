@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy, onMount } from "svelte";
+	import { onMount } from "svelte";
 
     interface ImageData {
         id: number;
@@ -109,10 +109,6 @@
     onMount(() => {
         fetchRandomImages();
         window.addEventListener('keydown', handleKeyDown);
-    });
-
-    onDestroy(() => {
-        window.removeEventListener('keydown', handleKeyDown);
     });
 </script>
 
