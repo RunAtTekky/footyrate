@@ -137,6 +137,7 @@ h1 {
     color: black;
     font-weight: 800;
     font-size: 3rem;
+    font-style: italic;
     text-shadow: 1px 0 #fff, -1px 0 #fff, 0 1px #fff, 0 -1px #fff,
             1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff;
 }
@@ -186,7 +187,7 @@ img {
     }
     h1 {
         position: absolute;
-        top: 50%;
+        top: 50vh;
         transform: translateY(-50%);
         z-index: 3;
         color: black;
@@ -207,9 +208,6 @@ button:hover {
 }
 img:active {
     transform: scale(0.98);
-}
-button:active {
-    transform: translateY(4px);
 }
 .loading {
     height: 300px;
