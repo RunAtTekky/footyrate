@@ -13,7 +13,7 @@
 
     <div class="standings">
         <a href="/standings">
-            <img src={IMG2} alt="standings page">
+            <img src={IMG2} alt="standings">
         </a>
         <p>Standings</p>
     </div>
@@ -76,15 +76,26 @@
         font-style: italic;
     }
 
+    a {
+        display: block;
+        height: 100%;
+        width: 100%;
+        text-decoration: none;
+    }
+
     @media (max-width: 640px) {
         main {
             flex-direction: column;
+            height: 100vh;
+            overflow-y: hidden;
         }
         .rate {
             width: 100%;
+            height: 50vh;
         }
         .standings {
             width: 100%;
+            height: 50vh;
         }
         .rate > p {
             top: 25%;
