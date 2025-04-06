@@ -164,7 +164,7 @@ img {
     object-fit: contain;
 }
 
-@media (max-width: 450px) {
+@media (max-width: 640px) {
     container {
         justify-content: start;
         gap: 0;
@@ -172,13 +172,22 @@ img {
     container button {
         flex-basis: 100%;
         height: 50vh;
+        /* transition: none; */
+    }
+
+    container button:hover {
+        transform: scale(1);
     }
     h1 {
         position: absolute;
-        top: 45%;
+        top: 50%;
+        transform: translateY(-50%);
         z-index: 3;
-        color: azure;
-        font-size: 3rem;
+        color: black;
+        font-weight: 800;
+        font-size: 2rem;
+        text-shadow: 1px 0 #fff, -1px 0 #fff, 0 1px #fff, 0 -1px #fff,
+               1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff;
     }
     p {
         display: none;
