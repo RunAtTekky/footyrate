@@ -126,28 +126,32 @@ main {
     justify-content: flex-start;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(#CAFFD0, #C9E4E7, #CA3CFF, #CA3CFF);
+    background-color: black;
+    /* background: linear-gradient(#CAFFD0, #C9E4E7, #CA3CFF, #CA3CFF); */
 }
 h1 {
-    font-style: italic;
-    font-size: 3rem;
-}
-p {
-    font-size: 1rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    color: black;
     font-weight: 800;
+    font-size: 3rem;
+    text-shadow: 1px 0 #fff, -1px 0 #fff, 0 1px #fff, 0 -1px #fff,
+            1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff;
 }
 container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
-    gap: 30px;
+    /* justify-content: space-around; */
+    /* gap: 30px; */
     width: 100%;
     /* border: solid 2px blue; */
 }
 button {
     display: flex;
-    width: 40%;
-    height: 600px;
+    width: 50%;
+    height: 100vh;
     justify-content: center;
     min-width: 300px; /* Adjust this value based on your needs */
     border: none;
@@ -160,8 +164,9 @@ button {
 img {
     width: 100%;
     height: 100%;
+    border: none;
     max-height: var(--IMAGE_HEIGHT);
-    object-fit: contain;
+    object-fit: cover;
 }
 
 @media (max-width: 640px) {
@@ -196,19 +201,17 @@ img {
         height: 100%;
         width: 100%;
         object-fit: cover;
-        /* filter: blur(2px); */
     }
 }
 
 button:hover {
-    transform: scale(1.05);
+    transform: scale(1);
+}
+button:active {
+    transform: scale(0.90);
 }
 button:active {
     transform: translateY(4px);
-}
-.result {
-    padding-top: 20px;
-    margin-bottom: 20px;
 }
 .loading {
     height: 300px;
@@ -236,11 +239,5 @@ button:active {
                 <!-- <img src={Image2.url} alt="Second"> -->
             </button>
         </container>
-        
-        {#if selected != 0}
-            <p class="result">Image {selected} selected</p>
-        {:else}
-            <p class="result">Select an image</p>
-        {/if}
     {/if}
 </main>
