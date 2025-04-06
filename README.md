@@ -41,5 +41,5 @@ So when you open the website after the server has shut down, it will take some t
     - [x] Switch to mongoDB
 - [x] Responsive website
 - [x] Reduce image size for faster loading
-- [ ] Better images without watermark
+- [x] Better images without watermark
 

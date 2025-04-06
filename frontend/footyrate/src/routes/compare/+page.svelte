@@ -167,6 +167,7 @@ img {
     border: none;
     max-height: var(--IMAGE_HEIGHT);
     object-fit: cover;
+    transition: 0.3s;
 }
 
 @media (max-width: 640px) {
@@ -194,9 +195,6 @@ img {
         text-shadow: 1px 0 #fff, -1px 0 #fff, 0 1px #fff, 0 -1px #fff,
                1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff;
     }
-    p {
-        display: none;
-    }
     img {
         height: 100%;
         width: 100%;
@@ -207,8 +205,8 @@ img {
 button:hover {
     transform: scale(1);
 }
-button:active {
-    transform: scale(0.90);
+img:active {
+    transform: scale(0.98);
 }
 button:active {
     transform: translateY(4px);
@@ -228,12 +226,12 @@ button:active {
         <div class="loading">Loading images...</div>
     {:else}
         <container>
-            <button onclick={() => handle_selection(1)}>
+            <button class="left" onclick={() => handle_selection(1)}>
                 <!-- <img src={Image1.url} height={IMAGE_HEIGHT} alt="First"> -->
                 <img src={Image1.url} alt="First">
                 <!-- <img src={Image1.url} alt="First"> -->
             </button>
-            <button onclick={() => handle_selection(2)}>
+            <button class="right" onclick={() => handle_selection(2)}>
                 <!-- <img src={Image2.url} height={IMAGE_HEIGHT} alt="Second"> -->
                 <img src={Image2.url} alt="Second">
                 <!-- <img src={Image2.url} alt="Second"> -->
