@@ -27,11 +27,6 @@ winner_ELO += ELO_change
 loser_ELO -= ELO_change
 ```
 
-## Onrender Problem
-The backend server shuts down after inactivity and takes a long time to start back up.
-
-So when you open the website after the server has shut down, it will take some time before showing you the images.
-
 ## TODO
 - [x] Implement variable K value
 - [x] Standings
