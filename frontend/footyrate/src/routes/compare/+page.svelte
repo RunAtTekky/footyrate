@@ -29,6 +29,10 @@
     let selected = $state(0);
     // State for image URLs from API
     let loading = $state(true);
+    let show_result = $state(false);
+    let winner_at_left = true;
+    let winner_elo_change = 0;
+    let loser_elo_change = 0;
     const IMAGE_HEIGHT = '100px';
 
     const HOST = import.meta.env.DEV ? "http://localhost:8080" : "https://footyrate.onrender.com";
@@ -58,11 +62,17 @@
 
             const data = await response.json();
 
-            var new_winner_elo = data.image1.elo;
-            var new_loser_elo = data.image2.elo;
+            winner_elo_change = data.image1.elo - current_winner_elo;
+            loser_elo_change = data.image2.elo - current_loser_elo;
 
-            console.log(new_winner_elo - current_winner_elo);
-            console.log(new_loser_elo - current_loser_elo);
+            console.log(winner_elo_change);
+            console.log(loser_elo_change);
+
+            show_result = true;
+
+            await new Promise(f => setTimeout(f, 1000));
+
+            show_result = false;
 
         } catch(err) {
             console.error("Error occurred submitting vote", err);
@@ -92,8 +102,10 @@
 
     function handle_vote(n: number) {
         if (n == 1) {
+            winner_at_left = true;
             submit_vote(Image1, Image2)
         } else {
+            winner_at_left = false;
             submit_vote(Image2, Image1)
         }
     }
@@ -182,6 +194,29 @@ img {
     transition: 0.3s;
 }
 
+.layer {
+    height: 100vh;
+    width: 100vw;
+
+    background-color: black;
+    z-index: 4;
+}
+
+.left_side {
+    position: absolute;
+    top: 50vh;
+    left: 25vw;
+
+    transform: translateX(-50%);
+}
+
+.right_side {
+    position: absolute;
+    top: 50vh;
+    left: 75vw;
+    transform: translateX(-50%);
+}
+
 @media (max-width: 640px) {
     container {
         justify-content: start;
@@ -230,20 +265,35 @@ img:active {
 
 <main>
     <h1>Choose</h1>
-    
-    {#if loading}
+
+    {#if show_result}
+        <div class="layer">
+
+        </div>
+        {#if winner_at_left}
+            <h2 class="left_side" style="z-index: 5; color:green">
+                Winner Change {winner_elo_change}
+            </h2>
+            <h2 class="right_side" style="z-index: 5; color:red">
+                Loser Change {loser_elo_change}
+            </h2>
+        {:else}
+            <h2 class="right_side" style="z-index: 5; color:green">
+                Winner Change {winner_elo_change}
+            </h2>
+            <h2 class="left_side" style="z-index: 5; color:red">
+                Loser Change {loser_elo_change}
+            </h2>
+        {/if}
+    {:else if loading}
         <div class="loading">Loading images...</div>
     {:else}
         <container>
             <button class="left" onclick={() => handle_selection(1)}>
-                <!-- <img src={Image1.url} height={IMAGE_HEIGHT} alt="First"> -->
                 <img src={Image1.url} alt="First">
-                <!-- <img src={Image1.url} alt="First"> -->
             </button>
             <button class="right" onclick={() => handle_selection(2)}>
-                <!-- <img src={Image2.url} height={IMAGE_HEIGHT} alt="Second"> -->
                 <img src={Image2.url} alt="Second">
-                <!-- <img src={Image2.url} alt="Second"> -->
             </button>
         </container>
     {/if}
