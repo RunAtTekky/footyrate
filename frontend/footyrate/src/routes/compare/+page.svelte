@@ -30,9 +30,9 @@
     // State for image URLs from API
     let loading = $state(true);
     let show_result = $state(false);
-    let winner_at_left = true;
-    let winner_elo_change = 0;
-    let loser_elo_change = 0;
+    let winner_at_left = $state(true);
+    let winner_elo_change = $state(0);
+    let loser_elo_change = $state(0);
     const IMAGE_HEIGHT = '100px';
 
     const HOST = import.meta.env.DEV ? "http://localhost:8080" : "https://footyrate.onrender.com";
@@ -201,6 +201,14 @@ img {
     z-index: 4;
 }
 
+.elo_change {
+    z-index: 5;
+    font-size: 3rem;
+
+    font-weight: 800;
+    animation: dropIn 0.6s cubic-bezier(.82,.13,.66,1.15) forwards, pulse 0.5s 0.6s ease-in-out;
+}
+
 .left_side {
     position: absolute;
     top: 50vh;
@@ -216,6 +224,36 @@ img {
     left: 75vw;
     transform: translateX(-50%);
     transform: translateY(-50%);
+}
+
+@keyframes dropIn {
+  0% {
+    transform: scale(4);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  70% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    text-shadow: 0 0 0px rgba(255, 255, 255, 0.8);
+  }
+  50% {
+    transform: scale(1.2);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+  }
+  100% {
+    transform: scale(1);
+    text-shadow: 0 0 0px rgba(255, 255, 255, 0.8);
+  }
 }
 
 @media (max-width: 640px) {
@@ -261,6 +299,7 @@ img {
         transform: translateY(-50%);
         transform: translateX(-50%);
     }
+
 }
 
 button:hover {
@@ -285,17 +324,17 @@ img:active {
 
         </div>
         {#if winner_at_left}
-            <h2 class="left_side" style="z-index: 5; color:green">
+            <h2 class="elo_change left_side" style="z-index: 5; color:green">
                 +{winner_elo_change}
             </h2>
-            <h2 class="right_side" style="z-index: 5; color:red">
+            <h2 class="elo_change right_side" style="z-index: 5; color:red">
                 {loser_elo_change}
             </h2>
         {:else}
-            <h2 class="right_side" style="z-index: 5; color:green">
+            <h2 class="elo_change right_side" style="z-index: 5; color:green">
                 +{winner_elo_change}
             </h2>
-            <h2 class="left_side" style="z-index: 5; color:red">
+            <h2 class="elo_change left_side" style="z-index: 5; color:red">
                 {loser_elo_change}
             </h2>
         {/if}
