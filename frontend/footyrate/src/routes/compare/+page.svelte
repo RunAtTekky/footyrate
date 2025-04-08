@@ -37,7 +37,9 @@
     const API_URL = HOST + '/api/random-images';
     const API_RESULT = HOST + '/api/result';
 
-    async function submit_vote(winnerID: number, loserID: number) {
+    async function submit_vote(winner: ImageData, loser: ImageData) {
+        var current_winner_elo = winner.elo;
+        var current_loser_elo = loser.elo;
         try {
             const response = await fetch(API_RESULT, {
                 method: 'POST',
@@ -45,14 +47,23 @@
                     'Content-Type' : 'application/json',
                 },
                 body: JSON.stringify({
-                    winner_ID: winnerID,
-                    loser_ID: loserID,
+                    winner_ID: winner.id,
+                    loser_ID: loser.id,
                 })
             })
 
             if (!response.ok) {
                 throw new Error('Error submitting vote');
             }
+
+            const data = await response.json();
+
+            var new_winner_elo = data.image1.elo;
+            var new_loser_elo = data.image2.elo;
+
+            console.log(new_winner_elo - current_winner_elo);
+            console.log(new_loser_elo - current_loser_elo);
+
         } catch(err) {
             console.error("Error occurred submitting vote", err);
         }
@@ -81,9 +92,9 @@
 
     function handle_vote(n: number) {
         if (n == 1) {
-            submit_vote(Image1.id, Image2.id)
+            submit_vote(Image1, Image2)
         } else {
-            submit_vote(Image2.id, Image1.id)
+            submit_vote(Image2, Image1)
         }
     }
     function handle_selection (n: number) {

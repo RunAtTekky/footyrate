@@ -24,12 +24,17 @@ func Handle_result(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	compute_result(result)
+	winner, loser := compute_result(result)
 
-	json.NewEncoder(w).Encode(result)
+	response := models.Response{
+		Player1: winner,
+		Player2: loser,
+	}
+
+	json.NewEncoder(w).Encode(response)
 }
 
-func compute_result(result *models.Result) {
+func compute_result(result *models.Result) (models.Player, models.Player) {
 
 	var winner_idx int = -1
 	var loser_idx int = -1
@@ -60,6 +65,8 @@ func compute_result(result *models.Result) {
 
 	models.All_Players.Update_Rounds(winner)
 	models.All_Players.Update_Rounds(loser)
+
+	return *winner, *loser
 }
 
 func update_ELO(winner *models.Player, loser *models.Player) {
