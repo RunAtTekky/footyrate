@@ -202,56 +202,52 @@ img {
 }
 
 .elo_change {
+    display: flex;
     z-index: 5;
     font-size: 3rem;
-
     font-weight: 800;
+    position: absolute;
     animation: dropIn 0.6s cubic-bezier(.82,.13,.66,1.15) forwards, pulse 0.5s 0.6s ease-in-out;
 }
 
 .left_side {
-    position: absolute;
     top: 50vh;
     left: 25vw;
-
-    transform: translateX(-50%);
-    transform: translateY(-50%);
+    transform: translate(-50%, -50%);
 }
 
 .right_side {
-    position: absolute;
     top: 50vh;
     left: 75vw;
-    transform: translateX(-50%);
-    transform: translateY(-50%);
+    transform: translate(-50%, -50%);
 }
 
 @keyframes dropIn {
   0% {
-    transform: scale(4);
+    transform: translate(-50%, -50%) scale(4);
   }
   50% {
-    transform: scale(1.3);
+    transform: translate(-50%, -50%) scale(1.3);
   }
   70% {
-    transform: scale(1.2);
+    transform: translate(-50%, -50%) scale(1.2);
   }
   100% {
-    transform: scale(1);
+    transform: translate(-50%, -50%) scale(1);
   }
 }
 
 @keyframes pulse {
   0% {
-    transform: scale(1);
+    transform: translate(-50%, -50%) scale(1);
     text-shadow: 0 0 0px rgba(255, 255, 255, 0.8);
   }
   50% {
-    transform: scale(1.2);
+    transform: translate(-50%, -50%) scale(1.2);
     text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
   }
   100% {
-    transform: scale(1);
+    transform: translate(-50%, -50%) scale(1);
     text-shadow: 0 0 0px rgba(255, 255, 255, 0.8);
   }
 }
@@ -290,14 +286,10 @@ img {
     .left_side {
         top: 25vh;
         left: 50vw;
-        transform: translateY(-50%);
-        transform: translateX(-50%);
     }
     .right_side {
         top: 75vh;
         left: 50vw;
-        transform: translateY(-50%);
-        transform: translateX(-50%);
     }
 
 }
@@ -342,6 +334,8 @@ img:active {
         <div class="loading">Loading images...</div>
     {:else}
         <container>
+            <!-- <div class="elo_change left_side">lol</div>
+            <div class="elo_change right_side">lol</div> -->
             <button class="left" onclick={() => handle_selection(1)}>
                 <img src={Image1.url} alt="First">
             </button>
