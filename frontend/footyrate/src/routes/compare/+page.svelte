@@ -100,7 +100,9 @@
         }
     }
 
-    function handle_vote(n: number) {
+    async function handle_selection (n: number) {
+        selected = n;
+
         if (n == 1) {
             winner_at_left = true;
             submit_vote(Image1, Image2)
@@ -108,12 +110,9 @@
             winner_at_left = false;
             submit_vote(Image2, Image1)
         }
-    }
-    function handle_selection (n: number) {
-        selected = n;
 
-        handle_vote(n);
-        fetchRandomImages();
+        await new Promise(f => setTimeout(f, 1000));
+        await fetchRandomImages();
     }
 
     function handleKeyDown(e: KeyboardEvent) {
