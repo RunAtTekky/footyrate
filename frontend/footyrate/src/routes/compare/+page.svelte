@@ -207,6 +207,7 @@ img {
     left: 25vw;
 
     transform: translateX(-50%);
+    transform: translateY(-50%);
 }
 
 .right_side {
@@ -214,6 +215,7 @@ img {
     top: 50vh;
     left: 75vw;
     transform: translateX(-50%);
+    transform: translateY(-50%);
 }
 
 @media (max-width: 640px) {
@@ -246,6 +248,19 @@ img {
         width: 100%;
         object-fit: cover;
     }
+
+    .left_side {
+        top: 25vh;
+        left: 50vw;
+        transform: translateY(-50%);
+        transform: translateX(-50%);
+    }
+    .right_side {
+        top: 75vh;
+        left: 50vw;
+        transform: translateY(-50%);
+        transform: translateX(-50%);
+    }
 }
 
 button:hover {
@@ -271,17 +286,17 @@ img:active {
         </div>
         {#if winner_at_left}
             <h2 class="left_side" style="z-index: 5; color:green">
-                Winner Change {winner_elo_change}
+                +{winner_elo_change}
             </h2>
             <h2 class="right_side" style="z-index: 5; color:red">
-                Loser Change {loser_elo_change}
+                {loser_elo_change}
             </h2>
         {:else}
             <h2 class="right_side" style="z-index: 5; color:green">
-                Winner Change {winner_elo_change}
+                +{winner_elo_change}
             </h2>
             <h2 class="left_side" style="z-index: 5; color:red">
-                Loser Change {loser_elo_change}
+                {loser_elo_change}
             </h2>
         {/if}
     {:else if loading}
