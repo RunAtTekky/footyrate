@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from "svelte";
+	import Pop from "./pop.svelte";
 
     interface ImageData {
         id: number;
@@ -201,56 +202,6 @@ img {
     z-index: 4;
 }
 
-.elo_change {
-    display: flex;
-    z-index: 5;
-    font-size: 3rem;
-    font-weight: 800;
-    position: absolute;
-    animation: dropIn 0.6s cubic-bezier(.82,.13,.66,1.15) forwards, pulse 0.5s 0.6s ease-in-out;
-}
-
-.left_side {
-    top: 50vh;
-    left: 25vw;
-    transform: translate(-50%, -50%);
-}
-
-.right_side {
-    top: 50vh;
-    left: 75vw;
-    transform: translate(-50%, -50%);
-}
-
-@keyframes dropIn {
-  0% {
-    transform: translate(-50%, -50%) scale(4);
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.3);
-  }
-  70% {
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-@keyframes pulse {
-  0% {
-    transform: translate(-50%, -50%) scale(1);
-    text-shadow: 0 0 0px rgba(255, 255, 255, 0.8);
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.2);
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    text-shadow: 0 0 0px rgba(255, 255, 255, 0.8);
-  }
-}
 
 @media (max-width: 640px) {
     container {
@@ -260,7 +211,6 @@ img {
     container button {
         flex-basis: 100%;
         height: 50vh;
-        /* transition: none; */
     }
 
     container button:hover {
@@ -283,15 +233,6 @@ img {
         object-fit: cover;
     }
 
-    .left_side {
-        top: 25vh;
-        left: 50vw;
-    }
-    .right_side {
-        top: 75vh;
-        left: 50vw;
-    }
-
 }
 
 button:hover {
@@ -312,30 +253,16 @@ img:active {
     <h1>Choose</h1>
 
     {#if show_result}
-        <div class="layer">
-
-        </div>
+        <div class="layer"> </div>
         {#if winner_at_left}
-            <h2 class="elo_change left_side" style="z-index: 5; color:green">
-                +{winner_elo_change}
-            </h2>
-            <h2 class="elo_change right_side" style="z-index: 5; color:red">
-                {loser_elo_change}
-            </h2>
+            <Pop {winner_elo_change} {loser_elo_change} winner_at_left={true} />
         {:else}
-            <h2 class="elo_change right_side" style="z-index: 5; color:green">
-                +{winner_elo_change}
-            </h2>
-            <h2 class="elo_change left_side" style="z-index: 5; color:red">
-                {loser_elo_change}
-            </h2>
+            <Pop {winner_elo_change} {loser_elo_change} winner_at_left={false} />
         {/if}
     {:else if loading}
         <div class="loading">Loading images...</div>
     {:else}
         <container>
-            <!-- <div class="elo_change left_side">lol</div>
-            <div class="elo_change right_side">lol</div> -->
             <button class="left" onclick={() => handle_selection(1)}>
                 <img src={Image1.url} alt="First">
             </button>
