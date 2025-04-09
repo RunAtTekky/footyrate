@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 	import Pop from "./pop.svelte";
+	import Image from "./image.svelte";
 
     interface ImageData {
         id: number;
@@ -172,27 +173,6 @@ container {
     width: 100%;
     /* border: solid 2px blue; */
 }
-button {
-    display: flex;
-    width: 50%;
-    height: 100vh;
-    justify-content: center;
-    min-width: 300px; /* Adjust this value based on your needs */
-    border: none;
-    padding: 0;
-    background: none;
-    transition: 0.3s;
-    cursor: pointer;
-}
-
-img {
-    width: 100%;
-    height: 100%;
-    border: none;
-    max-height: var(--IMAGE_HEIGHT);
-    object-fit: cover;
-    transition: 0.3s;
-}
 
 .layer {
     height: 100vh;
@@ -208,14 +188,6 @@ img {
         justify-content: start;
         gap: 0;
     }
-    container button {
-        flex-basis: 100%;
-        height: 50vh;
-    }
-
-    container button:hover {
-        transform: scale(1);
-    }
     h1 {
         position: absolute;
         top: 50vh;
@@ -227,20 +199,8 @@ img {
         text-shadow: 1px 0 #fff, -1px 0 #fff, 0 1px #fff, 0 -1px #fff,
                1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff;
     }
-    img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-    }
-
 }
 
-button:hover {
-    transform: scale(1);
-}
-img:active {
-    transform: scale(0.98);
-}
 .loading {
     height: 300px;
     display: flex;
@@ -263,12 +223,8 @@ img:active {
         <div class="loading">Loading images...</div>
     {:else}
         <container>
-            <button class="left" onclick={() => handle_selection(1)}>
-                <img src={Image1.url} alt="First">
-            </button>
-            <button class="right" onclick={() => handle_selection(2)}>
-                <img src={Image2.url} alt="Second">
-            </button>
+            <Image image={Image1} handler={handle_selection} side="left" />
+            <Image image={Image2} handler={handle_selection} side="right" />
         </container>
     {/if}
 </main>
