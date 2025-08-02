@@ -9,6 +9,10 @@ Frontend: [Svelte](https://github.com/sveltejs/svelte)
 
 Frontend URL: [Vercel](https://footyrate.vercel.app)
 
+![Footyrate Homepage](https://i.postimg.cc/YqWSrnYg/footyrate-homepage.png)
+
+![Footyrate Compare Page](https://i.postimg.cc/L4qPPVj4/comparison-page.png)
+
 ## How it works?
 A base ELO rating of 1400 is given to all the players.
 

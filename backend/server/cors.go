@@ -12,6 +12,7 @@ func Configure_CORS(server *Server) {
 			// "*",
 			"http://localhost:5173",        // React app
 			"https://footyrate.vercel.app", // Production frontend
+			"https://footy.runat.xyz",      // Production frontend
 			// "http://localhost:8080",        // Vue/Angular dev server
 		},
 
