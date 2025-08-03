@@ -6,16 +6,16 @@
 <main>
     <div class="rate">
         <a href="/compare">
+            <p id="rate-txt">Compare</p>
             <img src={IMG1} alt="compare">
         </a>
-        <p>Compare</p>
     </div>
 
     <div class="standings">
         <a href="/standings">
+            <p id="standings-txt">Standings</p>
             <img src={IMG2} alt="standings">
         </a>
-        <p>Standings</p>
     </div>
 </main>
 
@@ -38,6 +38,10 @@
         color: bisque;
     }
 
+    a:visited {
+        color: red;
+    }
+
     img {
         height: 100%;
         width: 100%;
@@ -50,7 +54,7 @@
         height: 100vh;
     }
 
-    .rate > p {
+    #rate-txt {
         position: absolute;
         top: 50%;
         left: 25%;
@@ -66,7 +70,7 @@
         height: 100vh;
     }
 
-    .standings > p {
+    #standings-txt {
         position: absolute;
         top: 50%;
         left: 75%;
@@ -98,12 +102,12 @@
             width: 100%;
             height: 50vh;
         }
-        .rate > p {
+        #rate-txt {
             top: 25%;
             left: 50%;
             transform: translateX(-50%);
         }
-        .standings > p {
+        #standings-txt {
             top: 75%;
             left: 50%;
             transform: translateX(-50%);
