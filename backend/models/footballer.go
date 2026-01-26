@@ -9,9 +9,13 @@ type Footballer struct {
 }
 
 func (f *Footballer) GetELO() float32 {
-	return 800.0
+	return f.ELO
 }
 
 func (f *Footballer) ChangeELO(change float32) {
+	f.ELO += change
+}
 
+func (f *Footballer) GetKfactor() int {
+	return f.K_Factor
 }
