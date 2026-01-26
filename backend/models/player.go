@@ -18,6 +18,6 @@ type Player interface {
 }
 
 type PlayerStore interface {
-	GetByID(id string) (*Player, error)
-	Save(player *Player) error
+	GetByID(id string) (Player, error)
+	Save(player Player) error
 }

@@ -14,8 +14,8 @@ func (s *stubPlayerStore) GetByID(id string) (*models.Player, error) {
 	return nil, nil
 }
 
-func (s *stubPlayerStore) Save(player *models.Footballer) error {
-	s.Players = append(s.Players, player)
+func (s *stubPlayerStore) Save(player *models.Player) error {
+	s.Players = append(s.Players, *player)
 	return nil
 }
 
@@ -24,12 +24,20 @@ func TestInMemoryPlayerStore(t *testing.T) {
 		runAt := models.NewFootballer("RunAt", "")
 		minato := models.NewFootballer("Minato", "")
 
-		store := &stubPlayerStore{}
+		store := NewInMemoryPlayerStore()
 		store.Save(runAt)
 		store.Save(minato)
 
-		if (len(store.Players) < 2) || (store.Players[0] != runAt && store.Players[1] != minato) {
-			t.Fatalf("Wanted %v and %v\nGot %v and %v", runAt, minato, store.Players[0], store.Players[1])
+		if player, _ := store.GetByID(runAt.Name); player != runAt {
+			t.Errorf("Want %v but got %v", runAt, player)
 		}
+
+		if player, _ := store.GetByID(minato.Name); player != minato {
+			t.Errorf("Want %v but got %v", minato, player)
+		}
+
+		// if (len(store.Players) < 2) || (store.Players[0] != runAt && store.Players[1] != minato) {
+		// 	t.Fatalf("Wanted %v and %v\nGot %v and %v", runAt, minato, store.Players[0], store.Players[1])
+		// }
 	})
 }

@@ -7,14 +7,21 @@ import (
 	"github.com/runattekky/footyrate/models"
 )
 
+func NewInMemoryPlayerStore() *InMemoryPlayerStore {
+	return &InMemoryPlayerStore{
+		map[string]models.Player{},
+		sync.RWMutex{},
+	}
+}
+
 type InMemoryPlayerStore struct {
-	store map[string]*models.Player
+	store map[string]models.Player
 	lock  sync.RWMutex
 }
 
-func (f *InMemoryPlayerStore) GetByID(id string) (*models.Player, error) {
+func (f *InMemoryPlayerStore) GetByID(id string) (models.Player, error) {
 	f.lock.RLock()
-	defer f.lock.Unlock()
+	defer f.lock.RUnlock()
 
 	player, ok := f.store[id]
 	if !ok {
@@ -24,11 +31,11 @@ func (f *InMemoryPlayerStore) GetByID(id string) (*models.Player, error) {
 	return player, nil
 }
 
-func (f *InMemoryPlayerStore) Save(player *models.Player) error {
-	f.lock.RLock()
+func (f *InMemoryPlayerStore) Save(player models.Player) error {
+	f.lock.Lock()
 	defer f.lock.Unlock()
 
-	name := (*player).GetName()
+	name := player.GetName()
 	f.store[name] = player
 
 	return nil
