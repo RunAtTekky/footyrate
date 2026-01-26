@@ -16,3 +16,8 @@ type Player interface {
 	ChangeELO(change float32)
 	UpdateKfactor(rounds int)
 }
+
+type PlayerStore interface {
+	GetByID(id string) (*Player, error)
+	Save(player *Player) error
+}
