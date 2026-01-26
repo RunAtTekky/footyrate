@@ -6,11 +6,11 @@ import (
 )
 
 func TestELOchange(t *testing.T) {
-	t.Run("1500 vs 1400 ELO should give 12.8 ELO Change", func(t *testing.T) {
+	t.Run("1500 (Winner) vs 1400 (Loser) ELO should give 0.64 expected score for winner", func(t *testing.T) {
 		var winnerELO float32 = 1500.0
 		var loserELO float32 = 1400.0
-		got := getELOchange(winnerELO, loserELO)
-		want := float32(12.8)
+		got := GetExpectedScore(winnerELO, loserELO)
+		want := float32(0.64)
 
 		assertFloat(t, got, want)
 	})
