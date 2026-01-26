@@ -9,11 +9,11 @@ import (
 
 type file_system_player_store struct {
 	database *json.Encoder
-	players  []models.Player
-	store    map[string]models.Player
+	players  []models.Footballer
+	store    map[string]*models.Footballer
 }
 
-func (f *file_system_player_store) GetByID(id string) (models.Player, error) {
+func (f *file_system_player_store) GetByID(id string) (*models.Footballer, error) {
 	player, ok := f.store[id]
 	if !ok {
 		return nil, fmt.Errorf("Could not find the player with id %q", id)
@@ -22,10 +22,10 @@ func (f *file_system_player_store) GetByID(id string) (models.Player, error) {
 	return player, nil
 }
 
-func (f *file_system_player_store) Save(player models.Player) error {
+func (f *file_system_player_store) Save(player *models.Footballer) error {
 	_, err := f.GetByID(player.GetName())
 	if err != nil {
-		f.players = append(f.players, player)
+		f.players = append(f.players, *player)
 		return nil
 	}
 

@@ -10,12 +10,12 @@ type stubPlayerStore struct {
 	Players []models.Player
 }
 
-func (s *stubPlayerStore) GetByID(id string) (*models.Player, error) {
+func (s *stubPlayerStore) GetByID(id string) (*models.Footballer, error) {
 	return nil, nil
 }
 
-func (s *stubPlayerStore) Save(player *models.Player) error {
-	s.Players = append(s.Players, *player)
+func (s *stubPlayerStore) Save(player *models.Footballer) error {
+	s.Players = append(s.Players, player)
 	return nil
 }
 

@@ -9,17 +9,17 @@ import (
 
 func NewInMemoryPlayerStore() *InMemoryPlayerStore {
 	return &InMemoryPlayerStore{
-		map[string]models.Player{},
+		map[string]*models.Footballer{},
 		sync.RWMutex{},
 	}
 }
 
 type InMemoryPlayerStore struct {
-	store map[string]models.Player
+	store map[string]*models.Footballer
 	lock  sync.RWMutex
 }
 
-func (f *InMemoryPlayerStore) GetByID(id string) (models.Player, error) {
+func (f *InMemoryPlayerStore) GetByID(id string) (*models.Footballer, error) {
 	f.lock.RLock()
 	defer f.lock.RUnlock()
 
@@ -31,7 +31,7 @@ func (f *InMemoryPlayerStore) GetByID(id string) (models.Player, error) {
 	return player, nil
 }
 
-func (f *InMemoryPlayerStore) Save(player models.Player) error {
+func (f *InMemoryPlayerStore) Save(player *models.Footballer) error {
 	f.lock.Lock()
 	defer f.lock.Unlock()
 
