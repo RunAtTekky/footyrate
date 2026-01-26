@@ -50,4 +50,19 @@ func (f *Footballer) SetRounds(rounds int) {
 
 func (f *Footballer) ChangeELO(change float32) {
 	f.ELO += change
+	f.Rounds++
+	f.UpdateKfactor(f.Rounds)
+}
+
+var k_factors = []int{100, 90, 80, 70, 60, 50, 40, 30, 20, 10}
+
+const roundsPerLevel = 10
+
+func (f *Footballer) UpdateKfactor(rounds int) {
+	lvl := rounds / roundsPerLevel
+	if lvl >= len(k_factors) {
+		lvl = len(k_factors) - 1
+	}
+
+	f.K_Factor = k_factors[lvl]
 }

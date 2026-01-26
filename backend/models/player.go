@@ -14,4 +14,5 @@ type Player interface {
 	SetRounds(int)
 
 	ChangeELO(change float32)
+	UpdateKfactor(rounds int)
 }
