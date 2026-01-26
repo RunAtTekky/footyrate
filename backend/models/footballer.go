@@ -8,10 +8,10 @@ type Footballer struct {
 	Rounds   int
 }
 
-func (f *Footballer) ProcessWin(opponent Player) {
-
+func (f *Footballer) GetELO() float32 {
+	return 800.0
 }
 
-func (f *Footballer) ProcessLoss(opponent Player) {
+func (f *Footballer) ChangeELO(change float32) {
 
 }
