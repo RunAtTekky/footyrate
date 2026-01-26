@@ -8,6 +8,26 @@ type Footballer struct {
 	Rounds   int
 }
 
+var k_factors = []int{100, 90, 80, 70, 60, 50, 40, 30, 20, 10}
+
+const (
+	roundsPerLevel = 10
+	InitialELO     = 1000
+)
+
+func NewFootballer(name string, ImgURL string) *Footballer {
+	footballer := &Footballer{
+		Name:     name,
+		ELO:      InitialELO,
+		ImgURL:   ImgURL,
+		Rounds:   0,
+		K_Factor: k_factors[0],
+	}
+
+	footballer.UpdateKfactor(footballer.Rounds)
+	return footballer
+}
+
 func (f *Footballer) GetName() string {
 	return f.Name
 }
@@ -53,10 +73,6 @@ func (f *Footballer) ChangeELO(change float32) {
 	f.Rounds++
 	f.UpdateKfactor(f.Rounds)
 }
-
-var k_factors = []int{100, 90, 80, 70, 60, 50, 40, 30, 20, 10}
-
-const roundsPerLevel = 10
 
 func (f *Footballer) UpdateKfactor(rounds int) {
 	lvl := rounds / roundsPerLevel
