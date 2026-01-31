@@ -1,11 +1,11 @@
 package models
 
 type Footballer struct {
-	Name     string
-	ELO      float32
-	ImgURL   string
-	K_Factor int
-	Rounds   int
+	Name     string  `json:"name"`
+	ELO      float32 `json:"elo"`
+	ImgURL   string  `json:"imgURL"`
+	K_Factor int     `json:"kFactor"`
+	Rounds   int     `json:"rounds"`
 }
 
 var k_factors = []int{100, 90, 80, 70, 60, 50, 40, 30, 20, 10}
