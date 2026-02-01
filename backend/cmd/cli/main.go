@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/runattekky/footyrate/models"
+	"github.com/runattekky/footyrate/pkg"
 	filesystem "github.com/runattekky/footyrate/pkg/storage/file-system"
 )
 
@@ -18,10 +18,17 @@ func main() {
 	defer close()
 
 	fmt.Println("Lets compare footballers")
+	// runat := &models.Footballer{Name: "RunAt"}
+	// store.Save(runat)
+	//
+	// cris := &models.Footballer{Name: "Cristiano"}
+	// store.Save(cris)
+	//
+	game := pkg.NewGame(store)
+	p1, p2, err := game.GetTwoOpps()
+	if err != nil {
+		log.Fatalf("Could not get two opps %v", err)
+	}
 
-	runat := &models.Footballer{Name: "RunAt"}
-	store.Save(runat)
-
-	cris := &models.Footballer{Name: "Cristiano"}
-	store.Save(cris)
+	fmt.Printf("p1:\n%v\np2:\n%v", p1, p2)
 }
