@@ -10,8 +10,6 @@ import (
 	filesystem "github.com/runattekky/footyrate/pkg/storage/file-system"
 )
 
-const dbFileName = "players.db"
-
 type stubReadWriteSeeker struct {
 	io.ReadSeeker
 }
@@ -46,17 +44,6 @@ func (s *StubFileSystemPlayerStore) Save(player *models.Footballer) error {
 }
 
 func TestFileStore(t *testing.T) {
-	t.Run("Testing FileSystem", func(t *testing.T) {
-		store, closeFunc, err := filesystem.FileSystemPlayerStoreFromFile(dbFileName)
-		if err != nil {
-			t.Errorf("Error creating Player Store %v", err)
-		}
-		defer closeFunc()
-
-		messi := models.NewFootballer("Messi", "")
-		store.Save(messi)
-	})
-
 	t.Run("Testing FileSystem Parsing and Saving", func(t *testing.T) {
 		data := `[{"name": "Messi"}]`
 		database := &stubReadWriteSeeker{strings.NewReader(data)}

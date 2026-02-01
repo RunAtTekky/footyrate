@@ -61,10 +61,12 @@ func (f *file_system_player_store) Save(player *models.Footballer) error {
 	p, err := f.GetByID(player.GetName())
 	if err != nil {
 		f.players = append(f.players, player)
+		f.database.Encode(f.players)
 		return nil
 	}
 
 	*p = *player
+	f.database.Encode(f.players)
 	return nil
 }
 
