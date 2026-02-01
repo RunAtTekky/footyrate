@@ -19,5 +19,7 @@ type Player interface {
 
 type PlayerStore interface {
 	GetByID(id string) (*Footballer, error)
+	GetAllPlayers() ([]*Footballer, error)
+	GetRatingGroup() (map[int][]*Footballer, error)
 	Save(player *Footballer) error
 }

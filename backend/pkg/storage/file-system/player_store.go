@@ -13,6 +13,7 @@ type file_system_player_store struct {
 	database       io.ReadWriteSeeker
 	players        []*models.Footballer
 	mapFootballers map[string]*models.Footballer
+	ratingGroup    map[int][]*models.Footballer
 }
 
 func FileSystemPlayerStoreFromFile(path string) (*file_system_player_store, func(), error) {
@@ -45,6 +46,7 @@ func NewFileSystemPlayerStore(database io.ReadWriteSeeker) (*file_system_player_
 		database:       database,
 		players:        players,
 		mapFootballers: createMap(players),
+		ratingGroup:    createRatingGroup(players),
 	}, nil
 }
 
@@ -74,6 +76,14 @@ func (f *file_system_player_store) Save(player *models.Footballer) error {
 	return json.NewEncoder(f.database).Encode(f.players)
 }
 
+func (f *file_system_player_store) GetAllPlayers() ([]*models.Footballer, error) {
+	return f.players, nil
+}
+
+func (f *file_system_player_store) GetRatingGroup() (map[int][]*models.Footballer, error) {
+	return f.ratingGroup, nil
+}
+
 func createMap(players []*models.Footballer) map[string]*models.Footballer {
 	mapFootballers := make(map[string]*models.Footballer)
 	for _, player := range players {
@@ -81,6 +91,17 @@ func createMap(players []*models.Footballer) map[string]*models.Footballer {
 	}
 
 	return mapFootballers
+}
+
+func createRatingGroup(players []*models.Footballer) map[int][]*models.Footballer {
+	ratingGroup := make(map[int][]*models.Footballer)
+
+	for _, player := range players {
+		eloRange := int((player.GetELO() / 100) * 100)
+		ratingGroup[eloRange] = append(ratingGroup[eloRange], player)
+	}
+
+	return ratingGroup
 }
 
 func NewPlayers(reader io.ReadWriteSeeker) ([]*models.Footballer, error) {
