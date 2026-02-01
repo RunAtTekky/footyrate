@@ -18,8 +18,10 @@ func main() {
 	defer close()
 
 	fmt.Println("Lets compare footballers")
-	fmt.Println("Adding RunAt")
 
 	runat := &models.Footballer{Name: "RunAt"}
 	store.Save(runat)
+
+	cris := &models.Footballer{Name: "Cristiano"}
+	store.Save(cris)
 }

@@ -10,7 +10,7 @@ import (
 )
 
 type file_system_player_store struct {
-	database       *json.Encoder
+	database       io.ReadWriteSeeker
 	players        []*models.Footballer
 	mapFootballers map[string]*models.Footballer
 }
@@ -42,7 +42,7 @@ func NewFileSystemPlayerStore(database io.ReadWriteSeeker) (*file_system_player_
 	}
 
 	return &file_system_player_store{
-		database:       json.NewEncoder(database),
+		database:       database,
 		players:        players,
 		mapFootballers: createMap(players),
 	}, nil
@@ -58,16 +58,20 @@ func (f *file_system_player_store) GetByID(id string) (*models.Footballer, error
 }
 
 func (f *file_system_player_store) Save(player *models.Footballer) error {
-	p, err := f.GetByID(player.GetName())
-	if err != nil {
+	if p, ok := f.mapFootballers[player.GetName()]; ok {
+		*p = *player
+	} else {
 		f.players = append(f.players, player)
-		f.database.Encode(f.players)
-		return nil
+		f.mapFootballers[player.GetName()] = player
 	}
 
-	*p = *player
-	f.database.Encode(f.players)
-	return nil
+	f.database.Seek(0, 0)
+
+	if file, ok := f.database.(*os.File); ok {
+		file.Truncate(0)
+	}
+
+	return json.NewEncoder(f.database).Encode(f.players)
 }
 
 func createMap(players []*models.Footballer) map[string]*models.Footballer {
