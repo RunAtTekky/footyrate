@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"fmt"
+	"math/rand"
 
 	"github.com/runattekky/footyrate/models"
 )
@@ -11,15 +12,33 @@ type Game struct {
 }
 
 func (g *Game) GetTwoOpps() (player1, player2 *models.Footballer, err error) {
-	player1, err = g.store.GetByID("RunAt")
+	allPlayers, err := g.store.GetAllPlayers()
 	if err != nil {
-		return nil, nil, fmt.Errorf("Could not find the player with name %s, %v", player1.GetName(), err)
+		return nil, nil, fmt.Errorf("Could not get all players list %v", err)
 	}
-	player2, err = g.store.GetByID("Cristiano")
+	n := len(allPlayers)
+
+	randomIdx := rand.Int() % n
+	player1 = allPlayers[randomIdx]
+
+	ratingGroup, err := g.store.GetRatingGroup()
 	if err != nil {
-		return nil, nil, fmt.Errorf("Could not find the player with name %s, %v", player2.GetName(), err)
+		return nil, nil, fmt.Errorf("Could not get rating group %v", err)
 	}
 
+	n = len(ratingGroup)
+	randomGroupELO := (rand.Int() % 4000) / 100 * 100
+	for len(ratingGroup[randomGroupELO]) == 0 {
+		randomGroupELO = (rand.Int() % 4000) / 100 * 100
+	}
+
+	m := len(ratingGroup[randomGroupELO])
+	randomPlayerIdx := rand.Int() % m
+	for ratingGroup[randomGroupELO][randomPlayerIdx] != player1 {
+		randomPlayerIdx = rand.Int() % m
+	}
+
+	player2 = ratingGroup[randomGroupELO][randomPlayerIdx]
 	return player1, player2, err
 }
 

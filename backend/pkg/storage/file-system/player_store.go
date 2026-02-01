@@ -73,6 +73,7 @@ func (f *file_system_player_store) Save(player *models.Footballer) error {
 		file.Truncate(0)
 	}
 
+	f.ratingGroup = createRatingGroup(f.players)
 	return json.NewEncoder(f.database).Encode(f.players)
 }
 
