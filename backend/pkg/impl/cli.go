@@ -65,8 +65,8 @@ func (c *CLI) readline() string {
 }
 
 func (c *CLI) displayPlayers(p1, p2 *models.Footballer) {
-	fmt.Fprintln(c.out, "Player 1")
+	fmt.Fprint(c.out, "Player 1: ")
 	fmt.Fprintln(c.out, p1)
-	fmt.Fprintln(c.out, "Player 2")
+	fmt.Fprint(c.out, "Player 2: ")
 	fmt.Fprintln(c.out, p2)
 }
