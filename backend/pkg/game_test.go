@@ -49,26 +49,37 @@ func (s *stubPlayerStore) Save(player *models.Footballer) error {
 }
 
 func TestOpps(t *testing.T) {
-	store := &stubPlayerStore{
-		players: []*models.Footballer{
-			{
-				Name: "RunAt",
-				ELO:  1500,
+	t.Run("with 2 players, try to get different opps", func(t *testing.T) {
+		store := &stubPlayerStore{
+			players: []*models.Footballer{
+				{
+					Name: "RunAt",
+					ELO:  1500,
+				},
+				{
+					Name: "Cristiano",
+					ELO:  2800,
+				},
 			},
-			{
-				Name: "Cristiano",
-				ELO:  2800,
-			},
-		},
-	}
-	game := pkg.NewGame(store)
+		}
+		game := pkg.NewGame(store)
 
-	p1, p2, err := game.GetTwoOpps()
-	if err != nil {
-		t.Fatalf("Error getting two opponents %v", err)
-	}
+		p1, p2, err := game.GetTwoOpps()
+		if err != nil {
+			t.Fatalf("Error getting two opponents %v", err)
+		}
 
-	assertPlayerNotEqual(t, p1, p2)
+		assertPlayerNotEqual(t, p1, p2)
+	})
+
+	t.Run("no players try to get different opps", func(t *testing.T) {
+		store := &stubPlayerStore{}
+		game := pkg.NewGame(store)
+		_, _, err := game.GetTwoOpps()
+		if err == nil {
+			t.Fatalf("Expected error, but did not get any, %v", err)
+		}
+	})
 }
 func assertPlayerNotEqual(t *testing.T, p1, p2 *models.Footballer) {
 	t.Helper()

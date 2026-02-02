@@ -31,6 +31,10 @@ func (g *Game) GetTwoOpps() (player1, player2 *models.Footballer, err error) {
 	if err != nil {
 		return nil, nil, fmt.Errorf("Could not get all players list %v", err)
 	}
+	if len(allPlayers) == 0 {
+		return nil, nil, fmt.Errorf("No player is there, can not give two opps")
+	}
+
 	player1 = getRandomPlayer(allPlayers)
 
 	ratingGroup, err := g.store.GetRatingGroup()
