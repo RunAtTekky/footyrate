@@ -72,7 +72,7 @@ func TestOpps(t *testing.T) {
 }
 func assertPlayerNotEqual(t *testing.T, p1, p2 *models.Footballer) {
 	t.Helper()
-	if p1 == p2 {
+	if p1.GetName() == p2.GetName() {
 		t.Errorf("Expected different players, got same player, %v", p1)
 	}
 }
