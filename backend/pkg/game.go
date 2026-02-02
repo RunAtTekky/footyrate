@@ -49,6 +49,10 @@ func (g *Game) GetTwoOpps() (player1, player2 *models.Footballer, err error) {
 	return player1, player2, nil
 }
 
+func (g *Game) SaveChoice(winner, loser *models.Footballer) {
+	UpdateELO(winner, loser)
+}
+
 func NewGame(store models.PlayerStore) *Game {
 	return &Game{store: store}
 }
