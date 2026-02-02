@@ -43,11 +43,13 @@ func (c *CLI) Start() {
 	case 1:
 		c.game.SaveChoice(p1, p2)
 	case 2:
-		c.game.SaveChoice(p1, p2)
+		c.game.SaveChoice(p2, p1)
 	default:
 		fmt.Fprintln(c.out, "Choose correct option")
 		return
 	}
+
+	c.displayPlayers(p1, p2)
 }
 
 func (c *CLI) readline() string {
