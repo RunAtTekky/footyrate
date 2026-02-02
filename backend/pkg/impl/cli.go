@@ -27,29 +27,36 @@ func NewCLI(in io.Reader, out io.Writer, game pkg.Game) *CLI {
 
 func (c *CLI) Start() {
 	fmt.Fprintln(c.out, "Let us start comparing")
-	p1, p2, err := c.game.GetTwoOpps()
+	for true {
+		fmt.Fprintln(c.out, "Getting two new players")
+		p1, p2, err := c.game.GetTwoOpps()
+		if err != nil {
+			fmt.Fprintln(c.out, "Error getting two opponents")
+		}
 
-	c.displayPlayers(p1, p2)
+		c.displayPlayers(p1, p2)
 
-	fmt.Fprintln(c.out, "Choose the better player, input 1 or 2")
-	choiceInput := c.readline()
+		fmt.Fprintln(c.out, "Choose the better player, input 1 or 2")
+		choiceInput := c.readline()
 
-	choice, err := strconv.Atoi(strings.Trim(choiceInput, "\n"))
-	if err != nil {
-		fmt.Fprintln(c.out, "Bad input")
+		choice, err := strconv.Atoi(strings.Trim(choiceInput, "\n"))
+		if err != nil {
+			fmt.Fprintln(c.out, "Bad input")
+		}
+
+		switch choice {
+		case 1:
+			c.game.SaveChoice(p1, p2)
+		case 2:
+			c.game.SaveChoice(p2, p1)
+		default:
+			fmt.Fprintln(c.out, "Choose correct option")
+		}
+
+		fmt.Fprintln(c.out, "Players after vote")
+		c.displayPlayers(p1, p2)
+		fmt.Fprint(c.out, "\n\n")
 	}
-
-	switch choice {
-	case 1:
-		c.game.SaveChoice(p1, p2)
-	case 2:
-		c.game.SaveChoice(p2, p1)
-	default:
-		fmt.Fprintln(c.out, "Choose correct option")
-		return
-	}
-
-	c.displayPlayers(p1, p2)
 }
 
 func (c *CLI) readline() string {

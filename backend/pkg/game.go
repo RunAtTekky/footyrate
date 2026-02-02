@@ -18,12 +18,16 @@ func getRandomPlayer(players []*models.Footballer) *models.Footballer {
 }
 
 func getRandomPlayerFromGroup(ratingGroup map[int][]*models.Footballer) *models.Footballer {
-	randomGroupELO := (rand.Int() % 4000) / 100 * 100
-	for len(ratingGroup[randomGroupELO]) == 0 {
-		randomGroupELO = (rand.Int() % 4000) / 100 * 100
+	// TODO: Only give players with rating difference of +-200
+	n := rand.Int() % len(ratingGroup)
+	for _, playersWithRating := range ratingGroup {
+		if n == 0 {
+			return getRandomPlayer(playersWithRating)
+		}
+		n--
 	}
 
-	return getRandomPlayer(ratingGroup[randomGroupELO])
+	return nil
 }
 
 func (g *Game) GetTwoOpps() (player1, player2 *models.Footballer, err error) {
