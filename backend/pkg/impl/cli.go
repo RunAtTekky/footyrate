@@ -16,7 +16,7 @@ type CLI struct {
 	game pkg.Game
 }
 
-func (c *CLI) NewCLI(in io.Reader, out io.Writer, game pkg.Game) *CLI {
+func NewCLI(in io.Reader, out io.Writer, game pkg.Game) *CLI {
 	return &CLI{
 		in:   bufio.NewScanner(in),
 		out:  out,

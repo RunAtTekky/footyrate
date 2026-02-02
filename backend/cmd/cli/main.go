@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"log"
+	"os"
 
-	"github.com/runattekky/footyrate/models"
 	"github.com/runattekky/footyrate/pkg"
+	"github.com/runattekky/footyrate/pkg/impl"
 	filesystem "github.com/runattekky/footyrate/pkg/storage/file-system"
 )
 
@@ -18,24 +18,20 @@ func main() {
 	}
 	defer close()
 
-	fmt.Println("Lets compare footballers")
-	runat := &models.Footballer{
-		Name: "RunAt",
-		ELO:  1550,
-	}
-	store.Save(runat)
-
-	cris := &models.Footballer{
-		Name: "Cristiano",
-		ELO:  2800,
-	}
-	store.Save(cris)
-
+	// fmt.Println("Lets compare footballers")
+	// runat := &models.Footballer{
+	// 	Name: "RunAt",
+	// 	ELO:  1550,
+	// }
+	// store.Save(runat)
+	//
+	// cris := &models.Footballer{
+	// 	Name: "Cristiano",
+	// 	ELO:  2800,
+	// }
+	// store.Save(cris)
+	//
 	game := pkg.NewGame(store)
-	p1, p2, err := game.GetTwoOpps()
-	if err != nil {
-		log.Fatalf("Could not get two opps %v", err)
-	}
-
-	fmt.Printf("p1:\n%v\np2:\n%v", p1, p2)
+	cli := impl.NewCLI(os.Stdin, os.Stdout, *game)
+	cli.Start()
 }
