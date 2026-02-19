@@ -18,7 +18,10 @@ func main() {
 	}
 	defer close()
 
-	pkg.LoadDummyPlayers(store)
+	players, _ := store.GetAllPlayers()
+	if len(players) == 0 {
+		pkg.LoadDummyPlayers(store)
+	}
 
 	game := pkg.NewGame(store)
 	cli := impl.NewCLI(os.Stdin, os.Stdout, *game)
