@@ -8,7 +8,7 @@ import (
 )
 
 type Game struct {
-	store models.PlayerStore
+	Store models.PlayerStore
 }
 
 func getRandomPlayer(players []*models.Footballer) *models.Footballer {
@@ -31,7 +31,7 @@ func getRandomPlayerFromGroup(ratingGroup map[int][]*models.Footballer) *models.
 }
 
 func (g *Game) GetTwoOpps() (player1, player2 *models.Footballer, err error) {
-	allPlayers, err := g.store.GetAllPlayers()
+	allPlayers, err := g.Store.GetAllPlayers()
 	if err != nil {
 		return nil, nil, fmt.Errorf("Could not get all players list %v", err)
 	}
@@ -41,7 +41,7 @@ func (g *Game) GetTwoOpps() (player1, player2 *models.Footballer, err error) {
 
 	player1 = getRandomPlayer(allPlayers)
 
-	ratingGroup, err := g.store.GetRatingGroup()
+	ratingGroup, err := g.Store.GetRatingGroup()
 	if err != nil {
 		return nil, nil, fmt.Errorf("Could not get rating group %v", err)
 	}
@@ -55,10 +55,10 @@ func (g *Game) GetTwoOpps() (player1, player2 *models.Footballer, err error) {
 
 func (g *Game) SaveChoice(winner, loser *models.Footballer) {
 	UpdateELO(winner, loser)
-	g.store.Save(winner)
-	g.store.Save(loser)
+	g.Store.Save(winner)
+	g.Store.Save(loser)
 }
 
 func NewGame(store models.PlayerStore) *Game {
-	return &Game{store: store}
+	return &Game{Store: store}
 }
