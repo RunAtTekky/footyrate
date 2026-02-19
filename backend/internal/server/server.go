@@ -26,6 +26,7 @@ func NewPlayerServer(store models.PlayerStore) *PlayerServer {
 
 func (p *PlayerServer) playersHandle(w http.ResponseWriter, r *http.Request) {
 	players, _ := p.store.GetAllPlayers()
+	w.Header().Set("Content-Type", "application/json")
 
 	json.NewEncoder(w).Encode(players)
 }
