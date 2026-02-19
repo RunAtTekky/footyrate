@@ -31,6 +31,7 @@ func NewPlayerServer(store models.PlayerStore) *PlayerServer {
 	router.HandleFunc("/players", p.getPlayerList)
 	router.HandleFunc("GET /compare", p.getTwoPlayers)
 	router.HandleFunc("POST /compare", p.saveVote)
+	router.HandleFunc("POST /add", p.addPlayer)
 
 	p.Handler = router
 	return p
@@ -59,6 +60,7 @@ func (p *PlayerServer) saveVote(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		http.Error(w, "Invalid JSON payload", http.StatusBadRequest)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -70,4 +72,18 @@ func (p *PlayerServer) saveVote(w http.ResponseWriter, r *http.Request) {
 	response := map[string]string{"status": "recorded"}
 	json.NewEncoder(w).Encode(response)
 
+}
+
+func (p *PlayerServer) addPlayer(w http.ResponseWriter, r *http.Request) {
+	var player *models.Footballer
+	err := json.NewDecoder(r.Body).Decode(&player)
+	if err != nil {
+		http.Error(w, "Invalid JSON payload", http.StatusBadRequest)
+		return
+	}
+
+	p.game.Store.Save(player)
+	w.Header().Set("Content-Type", "application/json")
+	response := map[string]string{"status": "added"}
+	json.NewEncoder(w).Encode(response)
 }
